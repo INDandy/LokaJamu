@@ -20,5 +20,4 @@
     <string name="invalid_password">Password minimal 8 Karakter</string>
     <string name="login_failed">"Login failed"</string>
     <string name="login">Login</string>
-    <string name="error">error</string>
 </resources>

@@ -49,6 +49,9 @@ class LoginFragment : Fragment() {
         val register = view.findViewById<TextView>(R.id.createAccountLink)
         val loadingProgressBar = binding.loading
 
+        loginButton.isEnabled = false
+
+
         loginViewModel.loginFormState.observe(viewLifecycleOwner, Observer { loginFormState ->
             if (loginFormState == null) {
                 return@Observer
@@ -66,7 +69,7 @@ class LoginFragment : Fragment() {
             if (loginFormState.isDataValid) {
                 loginButton.resources.getString(R.string.login)
             } else {
-                loginButton.resources.getString(R.string.error)
+                loginButton.resources.getString(R.string.login)
             }
         })
 

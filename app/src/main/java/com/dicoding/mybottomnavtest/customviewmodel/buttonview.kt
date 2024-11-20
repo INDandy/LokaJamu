@@ -31,9 +31,9 @@ class buttonview : AppCompatButton {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         setTextColor(txtColor)
-        textSize = 12f
+        textSize = 18f
         gravity = Gravity.CENTER
-        text = if(isEnabled) resources.getString(R.string.login) else resources.getString(R.string.error)
+        text = if(isEnabled) resources.getString(R.string.login) else resources.getString(R.string.login)
     }
 
 
