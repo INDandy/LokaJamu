@@ -18,4 +18,9 @@
     <style name="CustomTextItems" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
         <item name="fontFamily">sans-serif-light</item>
     </style>
+    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item  name="android:windowActionBar">@color/hijau</item>
+        <item name="android:windowBackground">@color/hijau</item>
+
+    </style>
 </resources>
