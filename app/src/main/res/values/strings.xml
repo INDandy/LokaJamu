@@ -20,4 +20,34 @@
     <string name="invalid_password">Password minimal 8 Karakter</string>
     <string name="login_failed">"Login failed"</string>
     <string name="login">Login</string>
+    <string name="register_title">Create an Account</string>
+    <string name="register_description">Pure taste, real benefits! Refresh your body with a glass of jamu. Register your account now and enjoy all the health perks!</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last Name</string>
+    <string name="sign_in">Sign In</string>
+    <string name="already_have_account">Already Have Account?</string>
+    <string name="register">Sign Up</string>
+    <string name="re_enter_your_password">Re-enter your Password</string>
+    <!-- LOGIN & REGISTER -->
+
+    <!-- WILL CHANGE LATER -->
+
+    <string name="event_image_desc">desc</string>
+    <string name="visit_event">Visit Event</string>
+    <string name="finished_image_desc">finished</string>
+    <string name="events">Events</string>
+    <string name="finished">Finished</string>
+    <string name="notification">Notification</string>
+    <string name="settings">Settings</string>
+    <string name="no_notifications_yet">No notifications yet</string>
+    <string name="favorite">favorite</string>
+    <string name="base_url">https://event-api.dicoding.dev/</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="daily_reminder">Daily Reminder</string>
+    <string name="event_time_format">%1$s - %2$s</string>
+    <string name="event_quota_format">Quota: %1$d</string>
+    <string name="event_description_format">%1$s</string>
+    <string name="delete_event">Hapus</string>
+
+    <!-- WILL CHANGE LATER -->
 </resources>

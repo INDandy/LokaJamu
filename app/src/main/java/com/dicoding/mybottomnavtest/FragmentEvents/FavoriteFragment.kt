@@ -5,48 +5,65 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.dicoding.mybottomnavtest.R
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.mybottomnavtest.adapter.FavoriteEventAdapter
+import com.dicoding.mybottomnavtest.database.AppDatabase
+import com.dicoding.mybottomnavtest.databinding.FragmentFavoriteBinding
+import com.dicoding.mybottomnavtest.repository.NewsRepository
+import com.dicoding.mybottomnavtest.viewmodel.FavoriteViewModel
+import com.dicoding.mybottomnavtest.viewmodel.FavoriteViewModelFactory
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FavoriteFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FavoriteFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+    private var _binding: FragmentFavoriteBinding? = null
+    private val binding get() = _binding!! // non-null assertion
 
+    private lateinit var favoriteViewModel: FavoriteViewModel
+    private lateinit var favoriteEventAdapter: FavoriteEventAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+    ): View {
+        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SubscriptionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FavoriteFragment().apply {
-                arguments = Bundle().apply {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-                }
+        // Set up ProgressBar
+        binding.progressBar.visibility = View.VISIBLE
+        binding.recyclerViewFavorite.visibility = View.GONE
+        binding.emptyStateMessage.visibility = View.GONE
+
+        binding.recyclerViewFavorite.layoutManager = LinearLayoutManager(requireContext())
+        favoriteEventAdapter = FavoriteEventAdapter(this)
+        binding.recyclerViewFavorite.adapter = favoriteEventAdapter
+
+        val eventDao = AppDatabase.getDatabase(requireContext()).eventDao()
+        val repository = NewsRepository(eventDao)
+
+        favoriteViewModel = ViewModelProvider(this, FavoriteViewModelFactory(repository))[FavoriteViewModel::class.java]
+
+        favoriteViewModel.favoriteEvents.observe(viewLifecycleOwner, Observer { events ->
+            binding.progressBar.visibility = View.GONE
+
+            if (events.isEmpty()) {
+                binding.emptyStateMessage.visibility = View.VISIBLE
+                binding.recyclerViewFavorite.visibility = View.GONE
+            } else {
+                binding.emptyStateMessage.visibility = View.GONE
+                binding.recyclerViewFavorite.visibility = View.VISIBLE
+                favoriteEventAdapter.submitList(events)
             }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

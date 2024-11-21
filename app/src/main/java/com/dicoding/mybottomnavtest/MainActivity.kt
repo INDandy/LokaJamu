@@ -20,10 +20,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Awal: sembunyikan bottom bar
         binding.bottomAppBar.visibility = View.GONE
         binding.kamera.visibility = View.GONE
 

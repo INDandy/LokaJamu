@@ -15,9 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.mybottomnavtest.ForgetPassword.ForgetFragment
+import com.dicoding.mybottomnavtest.FragmentRegister.RegisterFragment
 import com.dicoding.mybottomnavtest.MainActivity
 import com.dicoding.mybottomnavtest.R
-import com.dicoding.mybottomnavtest.RegisterFragment.RegisterFragment
 import com.dicoding.mybottomnavtest.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
@@ -67,9 +67,9 @@ class LoginFragment : Fragment() {
             }
 
             if (loginFormState.isDataValid) {
-                loginButton.resources.getString(R.string.login)
+                loginButton.resources.getString(R.string.register)
             } else {
-                loginButton.resources.getString(R.string.login)
+                loginButton.resources.getString(R.string.register)
             }
         })
 
@@ -123,6 +123,12 @@ class LoginFragment : Fragment() {
 
         forgotPassword.setOnClickListener {
             val transaction = parentFragmentManager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.enter_from_right,
+                R.anim.exit_to_left,
+                R.anim.enter_from_left,
+                R.anim.exit_to_right
+            )
             transaction.replace(R.id.frame_layout, ForgetFragment())
             transaction.addToBackStack(null)
             transaction.commit()
@@ -130,6 +136,12 @@ class LoginFragment : Fragment() {
 
         register.setOnClickListener {
             val transaction = parentFragmentManager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.enter_from_right,
+                R.anim.exit_to_left,
+                R.anim.enter_from_left,
+                R.anim.exit_to_right
+            )
             transaction.replace(R.id.frame_layout, RegisterFragment())
             transaction.addToBackStack(null)
             transaction.commit()
