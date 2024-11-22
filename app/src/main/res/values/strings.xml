@@ -7,7 +7,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- Strings related to login -->
 
-
+<!--    FORGOT PASSWORD-->
+    <string name="forgot_password">Forgot Password</string>
+    <string name="next">Next</string>
     <!-- LOGIN & REGISTER -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
