@@ -11,12 +11,14 @@ import com.dicoding.mybottomnavtest.FragmentEvents.NewsFragment
 import com.dicoding.mybottomnavtest.databinding.ItemNewsBinding
 
 class NewsAdapter(private val events: List<ListEventsItem>, private val fragment: NewsFragment) :
-    RecyclerView.Adapter<NewsAdapter.EventViewHolder>() {
+RecyclerView.Adapter<NewsAdapter.EventViewHolder>() {
 
     inner class EventViewHolder(private val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(event: ListEventsItem) {
             binding.newsName.text = event.name
+            binding.newsDate.text = event.beginTime
+
             Glide.with(fragment)
                 .load(event.imageLogo)
                 .into(binding.newsImage)
