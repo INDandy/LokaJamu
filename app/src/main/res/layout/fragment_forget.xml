@@ -9,7 +9,7 @@
         tools:context=".ForgetPassword.ForgetFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/ivBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
@@ -36,10 +36,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.206"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/floatingActionButton" />
+        app:layout_constraintTop_toBottomOf="@+id/ivBack" />
 
     <TextView
-        android:id="@+id/emailTextView"
+        android:id="@+id/etEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="68dp"
@@ -58,7 +58,7 @@
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailTextView">
+        app:layout_constraintTop_toBottomOf="@+id/etEmail">
 
         <com.dicoding.mybottomnavtest.customviewmodel.emailview
             android:id="@+id/emailEditText"
@@ -71,7 +71,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <com.dicoding.mybottomnavtest.customviewmodel.buttonview
+    <com.dicoding.mybottomnavtest.customviewmodel.nextbutton
         android:id="@+id/nextbutton"
         android:layout_width="249dp"
         android:layout_height="52dp"
