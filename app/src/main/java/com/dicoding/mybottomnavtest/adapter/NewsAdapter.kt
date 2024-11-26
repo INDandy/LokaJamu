@@ -1,47 +1,70 @@
 package com.dicoding.mybottomnavtest.adapter
 
-import android.content.Intent
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.dicoding.finalsubmission1.data.ListEventsItem
-import com.dicoding.mybottomnavtest.DetailActivity
-import com.dicoding.mybottomnavtest.FragmentEvents.NewsFragment
-import com.dicoding.mybottomnavtest.databinding.ItemNewsBinding
+import com.dicoding.mybottomnavtest.data.ArticleData
+import com.dicoding.mybottomnavtest.databinding.ItemLatestNewsBinding
 
-class NewsAdapter(private val events: List<ListEventsItem>, private val fragment: NewsFragment) :
-RecyclerView.Adapter<NewsAdapter.EventViewHolder>() {
+class NewsAdapter(private val items: List<ArticleData>) :
+RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
-    inner class EventViewHolder(private val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
+//    inner class EventViewHolder(private val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
+//
+//        fun bind(event: ListEventsItem) {
+//            binding.newsName.text = event.name
+//            binding.newsDate.text = event.beginTime
+//
+//            Glide.with(fragment)
+//                .load(event.imageLogo)
+//                .into(binding.newsImage)
+//
+//            binding.root.setOnClickListener {
+//                val eventId = event.id
+//                val intent = Intent(fragment.context, DetailActivity::class.java)
+//                intent.putExtra("EVENT_ID", eventId)
+//                fragment.startActivity(intent)
+//            }
+//        }
+//    }
+    class ViewHolder(val binding: ItemLatestNewsBinding): RecyclerView.ViewHolder(binding.root)
 
-        fun bind(event: ListEventsItem) {
-            binding.newsName.text = event.name
-            binding.newsDate.text = event.beginTime
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemLatestNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+    }
 
-            Glide.with(fragment)
-                .load(event.imageLogo)
-                .into(binding.newsImage)
+    override fun getItemCount(): Int {
+        return items.size
+    }
 
-            binding.root.setOnClickListener {
-                val eventId = event.id
-                val intent = Intent(fragment.context, DetailActivity::class.java)
-                intent.putExtra("EVENT_ID", eventId)
-                fragment.startActivity(intent)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        with(holder) {
+            with(items[position]) {
+                binding.tvLatestArticleTitle.text = this.title
+                binding.ivLatestArticle.setImageResource(this.image)
+
+                //set image exposure
+                val exposure = 0.7f
+                adjustExposure(binding.ivLatestArticle, exposure)
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
-        val binding = ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EventViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        holder.bind(events[position])
-    }
-
-    override fun getItemCount(): Int {
-        return events.size
+    private fun adjustExposure(iv: ImageView, value: Float) {
+        val colorMatrix = ColorMatrix()
+        colorMatrix.set(
+            floatArrayOf(
+                value, 0f, 0f, 0f, 0f,
+                0f, value, 0f, 0f, 0f,
+                0f, 0f, value, 0f, 0f,
+                0f, 0f, 0f, 1f, 0f
+            )
+        )
+        val colorFilter = ColorMatrixColorFilter(colorMatrix)
+        iv.colorFilter = colorFilter
     }
 }
