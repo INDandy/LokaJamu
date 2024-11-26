@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.mybottomnavtest.adapter.FavoriteEventAdapter
 import com.dicoding.mybottomnavtest.database.AppDatabase
@@ -39,7 +40,7 @@ class FavoriteFragment : Fragment() {
         binding.recyclerViewFavorite.visibility = View.GONE
         binding.emptyStateMessage.visibility = View.GONE
 
-        binding.recyclerViewFavorite.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerViewFavorite.layoutManager = GridLayoutManager(requireContext(), 2)
         favoriteEventAdapter = FavoriteEventAdapter(this)
         binding.recyclerViewFavorite.adapter = favoriteEventAdapter
 
