@@ -9,27 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.mybottomnavtest.data.ArticleData
 import com.dicoding.mybottomnavtest.databinding.ItemLatestNewsBinding
 
-class NewsAdapter(private val items: List<ArticleData>) :
-RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+class LatestNewsAdapter(private val items: List<ArticleData>) :
+    RecyclerView.Adapter<LatestNewsAdapter.ViewHolder>(){
 
-//    inner class EventViewHolder(private val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
-//
-//        fun bind(event: ListEventsItem) {
-//            binding.newsName.text = event.name
-//            binding.newsDate.text = event.beginTime
-//
-//            Glide.with(fragment)
-//                .load(event.imageLogo)
-//                .into(binding.newsImage)
-//
-//            binding.root.setOnClickListener {
-//                val eventId = event.id
-//                val intent = Intent(fragment.context, DetailActivity::class.java)
-//                intent.putExtra("EVENT_ID", eventId)
-//                fragment.startActivity(intent)
-//            }
-//        }
-//    }
     class ViewHolder(val binding: ItemLatestNewsBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -46,7 +28,25 @@ RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
             with(items[position]) {
                 binding.tvLatestArticleTitle.text = this.title
                 binding.ivLatestArticle.setImageResource(this.image)
+
+                //set image exposure
+                val exposure = 0.7f
+                adjustExposure(binding.ivLatestArticle, exposure)
             }
         }
+    }
+
+    private fun adjustExposure(iv: ImageView, value: Float) {
+        val colorMatrix = ColorMatrix()
+        colorMatrix.set(
+            floatArrayOf(
+                value, 0f, 0f, 0f, 0f,
+                0f, value, 0f, 0f, 0f,
+                0f, 0f, value, 0f, 0f,
+                0f, 0f, 0f, 1f, 0f
+            )
+        )
+        val colorFilter = ColorMatrixColorFilter(colorMatrix)
+        iv.colorFilter = colorFilter
     }
 }
