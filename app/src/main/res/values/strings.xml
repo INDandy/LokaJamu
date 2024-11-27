@@ -52,4 +52,14 @@
     <string name="delete_event">Hapus</string>
 
     <!-- WILL CHANGE LATER -->
+
+        <string name="my_profile">My Profile</string>
+        <string name="edit_profile">Edit Profile</string>
+        <string name="clear_history">Clear History</string>
+        <string name="logout">Log Out</string>
+        <string name="clear_history_icon">Clear History Icon</string>
+        <string name="logout_icon">Log Out Icon</string>
+
+
+
 </resources>

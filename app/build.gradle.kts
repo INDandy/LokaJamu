@@ -73,6 +73,8 @@ dependencies {
     annotationProcessor (libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
 
+    implementation (libs.material)
+
 
     
 
