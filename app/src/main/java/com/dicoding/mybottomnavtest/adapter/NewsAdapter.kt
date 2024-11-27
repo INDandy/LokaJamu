@@ -8,6 +8,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.mybottomnavtest.data.ArticleData
 import com.dicoding.mybottomnavtest.databinding.ItemLatestNewsBinding
+import com.dicoding.mybottomnavtest.databinding.ItemNewsBinding
 
 class NewsAdapter(private val items: List<ArticleData>) :
 RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
@@ -30,10 +31,10 @@ RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 //            }
 //        }
 //    }
-    class ViewHolder(val binding: ItemLatestNewsBinding): RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ItemNewsBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemLatestNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -44,27 +45,10 @@ RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(items[position]) {
-                binding.tvLatestArticleTitle.text = this.title
-                binding.ivLatestArticle.setImageResource(this.image)
-
-                //set image exposure
-                val exposure = 0.7f
-                adjustExposure(binding.ivLatestArticle, exposure)
+                binding.tvArticleTitle.text = this.title
+                binding.tvArticleDate.text = this.date
+                binding.ivArticle.setImageResource(this.image)
             }
         }
-    }
-
-    private fun adjustExposure(iv: ImageView, value: Float) {
-        val colorMatrix = ColorMatrix()
-        colorMatrix.set(
-            floatArrayOf(
-                value, 0f, 0f, 0f, 0f,
-                0f, value, 0f, 0f, 0f,
-                0f, 0f, value, 0f, 0f,
-                0f, 0f, 0f, 1f, 0f
-            )
-        )
-        val colorFilter = ColorMatrixColorFilter(colorMatrix)
-        iv.colorFilter = colorFilter
     }
 }

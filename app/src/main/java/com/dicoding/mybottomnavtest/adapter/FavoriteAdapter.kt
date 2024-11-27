@@ -28,12 +28,12 @@ class FavoriteEventAdapter(
 
     inner class FavoriteViewHolder(private val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(event: Event) {
-            binding.newsName.text = event.name
+            binding.tvArticleTitle.text = event.name
 
 
             Glide.with(binding.root.context)
                 .load(event.imageLogo)
-                .into(binding.newsImage)
+                .into(binding.ivArticle)
 
             binding.root.setOnClickListener {
                 val eventId = event.id
