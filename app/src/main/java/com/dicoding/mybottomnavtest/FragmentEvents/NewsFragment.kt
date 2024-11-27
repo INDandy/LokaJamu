@@ -14,6 +14,7 @@ import com.dicoding.finalsubmission1.data.ListEvent
 import com.dicoding.finalsubmission1.data.ListEventsItem
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.adapter.LatestNewsAdapter
+import com.dicoding.mybottomnavtest.adapter.NewsAdapter
 import com.dicoding.mybottomnavtest.api.ApiClient.apiService
 import com.dicoding.mybottomnavtest.data.ArticleData
 import com.dicoding.mybottomnavtest.databinding.FragmentNewsBinding
@@ -35,6 +36,7 @@ class NewsFragment : Fragment() {
 
     private lateinit var binding: FragmentNewsBinding
     private lateinit var latestArticleAdapter: LatestNewsAdapter
+    private lateinit var articleAdapter: NewsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +45,9 @@ class NewsFragment : Fragment() {
 
         binding.rvLatestArticle.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         setLatestArticleAdapter()
+
+        binding.rvArticleList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        setArticleAdapter()
 
         return binding.root
     }
@@ -58,6 +63,19 @@ class NewsFragment : Fragment() {
 
         latestArticleAdapter = LatestNewsAdapter(dataList)
         binding.rvLatestArticle.adapter = latestArticleAdapter
+    }
+
+    private fun setArticleAdapter() {
+        val dataList:MutableList<ArticleData> = mutableListOf()
+
+        articleTitleDummy().forEachIndexed { index, title ->
+            dataList.add(
+                ArticleData(articleImageDummy()[index], title, articleDateDummy()[index], articleAuthorDummy()[index], articleContentDummy()[index])
+            )
+        }
+
+        articleAdapter = NewsAdapter(dataList)
+        binding.rvArticleList.adapter = articleAdapter
     }
 
     private fun articleImageDummy(): List<Int> {
