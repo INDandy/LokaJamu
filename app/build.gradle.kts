@@ -64,6 +64,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.logging.interceptor)
 
     //ROOM LIBRARY
     implementation(libs.androidx.room.common)
@@ -72,6 +73,16 @@ dependencies {
     implementation(libs.androidx.room.runtime.v250)
     annotationProcessor (libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
+
+    //RECYCLEVIEW
+    implementation (libs.androidx.recyclerview)
+
+    //VIEWPAGER
+    implementation (libs.androidx.viewpager2)
+
+    //DATASTORE
+    implementation(libs.androidx.datastore.preferences) // For Preferences DataStore
+    implementation(libs.androidx.datastore.core) // For Proto DataStore
 
 
     

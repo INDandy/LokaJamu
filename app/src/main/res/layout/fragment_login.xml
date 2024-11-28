@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bone_white"
-    tools:context=".FragmentLogin.ui.login.LoginFragment">
+    tools:context=".FragmentLogin.LoginFragment">
 
 
     <TextView
@@ -112,26 +112,26 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.848"
+        app:layout_constraintHorizontal_bias="0.835"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/passwordEditTextLayout"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.02" />
 
     <com.dicoding.mybottomnavtest.customviewmodel.buttonview
         android:id="@+id/loginButton"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="104dp"
         android:layout_marginEnd="32dp"
+        android:background="@drawable/button_corner"
         android:backgroundTint="@color/hijau"
         android:text="@string/login"
-        android:background="@drawable/button_corner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditTextLayout"
-        tools:alpha="100"/>
+        tools:alpha="100" />
 
     <TextView
         android:id="@+id/footerText"
