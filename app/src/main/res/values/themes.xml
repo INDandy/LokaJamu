@@ -21,6 +21,10 @@
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <item  name="android:windowActionBar">@color/hijau</item>
         <item name="android:windowBackground">@color/hijau</item>
-
+    </style>
+    <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColorHint">#4CAF50</item>
+        <item name="android:iconifiedByDefault">false</item>
     </style>
 </resources>

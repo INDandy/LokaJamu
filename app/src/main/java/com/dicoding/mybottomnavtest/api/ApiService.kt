@@ -1,16 +1,23 @@
 package com.dicoding.mybottomnavtest.api
 
-import com.dicoding.finalsubmission1.data.ListEvent
-import retrofit2.Call
-import retrofit2.http.GET
+import com.dicoding.mybottomnavtest.Response.LoginRequest
+import com.dicoding.mybottomnavtest.Response.LoginResponseSuccess
+import com.dicoding.mybottomnavtest.Response.RegisterRequest
+import com.dicoding.mybottomnavtest.Response.RegisterResponse
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 interface ApiService {
 
-    @GET("events?active=0")
-    fun getFinished(): Call<ListEvent>
+    @POST("/api/users/register")
+    suspend fun register(
+        @Body registerRequest: RegisterRequest
+    ): RegisterResponse
 
-    @GET("events?active=1")
-    fun getEvents(): Call<ListEvent>
+    @POST("/api/users/login")
+    suspend fun login(
+        @Body loginRequest: LoginRequest
+    ): LoginResponseSuccess
 
 }
 

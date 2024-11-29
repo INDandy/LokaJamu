@@ -1,4 +1,4 @@
-package com.dicoding.finalsubmission1.data
+package com.dicoding.mybottomnavtest.data
 
 import com.google.gson.annotations.SerializedName
 

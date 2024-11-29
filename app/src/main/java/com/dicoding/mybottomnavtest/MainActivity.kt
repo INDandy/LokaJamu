@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.dicoding.mybottomnavtest.FragmentEvents.CameraFragment
 import com.dicoding.mybottomnavtest.FragmentEvents.FavoriteFragment
 import com.dicoding.mybottomnavtest.FragmentEvents.HomeFragment
 import com.dicoding.mybottomnavtest.FragmentEvents.NewsFragment
 import com.dicoding.mybottomnavtest.FragmentEvents.SettingsFragment
-import com.dicoding.mybottomnavtest.FragmentLogin.ui.login.LoginFragment
+import com.dicoding.mybottomnavtest.FragmentLogin.LoginFragment
 import com.dicoding.mybottomnavtest.databinding.ActivityMainBinding
+import com.dicoding.mybottomnavtest.preference.UserPreference
+import com.dicoding.mybottomnavtest.preference.dataStore
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,26 +24,26 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.bottomAppBar.visibility = View.GONE
-        binding.kamera.visibility = View.GONE
-
-        if (!isUserLoggedIn) {
-            loadFragment(LoginFragment(), showBottomBar = false)
-        } else {
-            binding.bottomNavigationView.visibility = View.VISIBLE
-            binding.bottomNavigationView.selectedItemId = R.id.home
-            loadFragment(HomeFragment())
+        lifecycleScope.launch {
+            val userPreference = UserPreference.getInstance(applicationContext.dataStore)
+            userPreference.getSession().collect { user ->
+                if (user.isLoggedIn) {
+                    binding.bottomNavigationView.setBackgroundResource(android.R.color.transparent)
+                    loadFragment(HomeFragment())
+                } else {
+                    loadFragment(LoginFragment(), showBottomBar = true)
+                }
+            }
         }
+
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             resetIconSizes()
 
             val itemView = binding.bottomNavigationView.findViewById<View>(item.itemId)
-
             itemView?.animate()?.scaleX(1.3f)?.scaleY(1.3f)?.setDuration(170)?.start()
 
             binding.bottomNavigationView.setBackgroundResource(android.R.color.transparent)
@@ -79,25 +83,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFragment(fragment: Fragment, showBottomBar: Boolean = true) {
-        if (showBottomBar) {
-            binding.bottomNavigationView.visibility = View.VISIBLE
-        } else {
-            binding.bottomNavigationView.visibility = View.GONE
-        }
+        binding.bottomNavigationView.visibility = if (showBottomBar) View.VISIBLE else View.GONE
+        binding.kamera.visibility = if (showBottomBar) View.VISIBLE else View.GONE
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_layout, fragment)
             .commit()
     }
 
+    private fun showBottomAppBarAndNavigation() {
+
+    }
+
+    private fun hideBottomAppBarAndNavigation() {
+    }
+
     fun onLoginSuccess() {
-        isUserLoggedIn = true
-
-        binding.bottomAppBar.visibility = View.VISIBLE
-        binding.kamera.visibility = View.VISIBLE
-
-        loadFragment(HomeFragment())
-
-        binding.bottomNavigationView.selectedItemId = R.id.home
+        loadFragment(NewsFragment())
     }
+    fun logout() {
+        lifecycleScope.launch {
+            val userPreference = UserPreference.getInstance(applicationContext.dataStore)
+            userPreference.logout()
+            hideBottomAppBarAndNavigation()
+            loadFragment(LoginFragment(), showBottomBar = false)
+        }
     }
+}
+
