@@ -74,6 +74,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     implementation (libs.material)
+    implementation (libs.androidx.viewpager2)
+
 
 
     
