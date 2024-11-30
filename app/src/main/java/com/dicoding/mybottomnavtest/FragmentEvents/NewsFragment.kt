@@ -27,12 +27,10 @@ class NewsFragment : Fragment(), View.OnClickListener {
     ): View {
         binding = FragmentNewsBinding.inflate(inflater, container, false)
 
-        binding.rvLatestArticle.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvLatestArticle.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         setLatestArticleAdapter()
 
-        binding.rvArticleList.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        binding.rvArticleList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         setArticleAdapter()
 
         binding.tvSeeAll.setOnClickListener(this)
@@ -85,7 +83,7 @@ class NewsFragment : Fragment(), View.OnClickListener {
             )
         }
 
-        articleAdapter = NewsAdapter(dataList)
+        articleAdapter = NewsAdapter(context, dataList)
         binding.rvArticleList.adapter = articleAdapter
     }
 

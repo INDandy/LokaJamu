@@ -1,12 +1,16 @@
 package com.dicoding.mybottomnavtest.adapter
 
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.dicoding.mybottomnavtest.DetailArticleActivity
 import com.dicoding.mybottomnavtest.data.ArticleData
 import com.dicoding.mybottomnavtest.databinding.ItemNewsBinding
 
-class NewsAdapter(private val items: List<ArticleData>) :
+class NewsAdapter(val context: Context?, private val items: List<ArticleData>) :
     RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemNewsBinding): RecyclerView.ViewHolder(binding.root)
@@ -26,6 +30,20 @@ class NewsAdapter(private val items: List<ArticleData>) :
                 binding.tvArticleTitle.text = this.title
                 binding.tvArticleDate.text = this.date
                 binding.ivArticle.setImageResource(this.image)
+
+                binding.root.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putString("title", this.title)
+                    bundle.putString("date", this.date)
+                    bundle.putString("author", this.author)
+                    bundle.putString("content", this.content)
+                    bundle.putInt("image", this.image)
+                    bundle.putBoolean("isFavorite", this.isFavorite)
+
+                    val intent = Intent(context, DetailArticleActivity::class.java)
+                    intent.putExtras(bundle)
+                    context?.startActivity(intent)
+                }
             }
         }
     }

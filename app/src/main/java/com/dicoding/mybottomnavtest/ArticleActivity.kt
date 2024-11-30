@@ -49,7 +49,7 @@ class ArticleActivity : AppCompatActivity() {
             )
         }
 
-        articleAdapter = NewsAdapter(dataList)
+        articleAdapter = NewsAdapter(this, dataList)
         binding.rvArticle.adapter = articleAdapter
     }
 
