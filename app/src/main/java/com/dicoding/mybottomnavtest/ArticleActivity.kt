@@ -1,25 +1,31 @@
 package com.dicoding.mybottomnavtest
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.mybottomnavtest.adapter.NewsAdapter
 import com.dicoding.mybottomnavtest.data.ArticleData
 import com.dicoding.mybottomnavtest.databinding.ActivityArticleBinding
+import com.google.android.material.snackbar.Snackbar
+import java.util.Locale
 
 class ArticleActivity : AppCompatActivity() {
     private lateinit var binding: ActivityArticleBinding
     private lateinit var articleAdapter: NewsAdapter
+    private lateinit var filteredList: ArrayList<ArticleData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityArticleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSearchView(binding.searchArticle)
         binding.rvArticle.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         setAdapter()
+        setSearchView(binding.searchArticle)
 
         binding.ivBack.setOnClickListener {
             finish()
@@ -51,6 +57,47 @@ class ArticleActivity : AppCompatActivity() {
 
         articleAdapter = NewsAdapter(this, dataList)
         binding.rvArticle.adapter = articleAdapter
+
+        setAdapterOnSearch(dataList)
+    }
+
+    private fun setAdapterOnSearch(data: MutableList<ArticleData>) {
+        filteredList = ArrayList(data)
+
+        binding.searchArticle.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onQueryTextChange(newText: String?): Boolean {
+                data.clear()
+                val searchText = newText!!.lowercase(Locale.getDefault())
+
+                if (searchText.isNotEmpty()) {
+                    filteredList.forEach {
+                        if (it.title.lowercase(Locale.getDefault()).contains(searchText)) {
+                            data.add(it)
+                        }
+                    }
+                    articleAdapter.notifyDataSetChanged()
+
+                    if(data.isEmpty()) {
+                        Snackbar.make(binding.root, "Artikel Tidak Ditemukan", Snackbar.LENGTH_SHORT)
+                            .setAction("Hapus") { binding.searchArticle.setQuery("", false) }
+                            .setActionTextColor(ContextCompat.getColor(binding.root.context, R.color.oranye))
+                            .show()
+                    }
+                }
+                else {
+                    data.clear()
+                    data.addAll(filteredList)
+                    articleAdapter.notifyDataSetChanged()
+                }
+                return false
+            }
+        })
     }
 
     private fun articleImageDummy(): List<Int> {
