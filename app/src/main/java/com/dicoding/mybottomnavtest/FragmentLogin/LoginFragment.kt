@@ -20,7 +20,7 @@ import com.dicoding.mybottomnavtest.FragmentRegister.RegisterFragment
 import com.dicoding.mybottomnavtest.MainActivity
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.UserModel
-import com.dicoding.mybottomnavtest.ViewModelFactory
+import com.dicoding.mybottomnavtest.viewmodel.ViewModelFactory
 import com.dicoding.mybottomnavtest.customviewmodel.emailview
 import com.dicoding.mybottomnavtest.customviewmodel.passwordview
 import com.dicoding.mybottomnavtest.databinding.FragmentLoginBinding

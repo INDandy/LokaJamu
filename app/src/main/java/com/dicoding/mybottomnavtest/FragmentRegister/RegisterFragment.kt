@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.dicoding.mybottomnavtest.FragmentLogin.LoginFragment
 import com.dicoding.mybottomnavtest.R
-import com.dicoding.mybottomnavtest.ViewModelFactory
 import com.dicoding.mybottomnavtest.customviewmodel.emailview
 import com.dicoding.mybottomnavtest.customviewmodel.lastnameview
 import com.dicoding.mybottomnavtest.customviewmodel.nameview
@@ -24,6 +23,7 @@ import com.dicoding.mybottomnavtest.customviewmodel.passwordview
 import com.dicoding.mybottomnavtest.databinding.FragmentRegisterBinding
 import com.dicoding.mybottomnavtest.preference.ResultValue
 import com.dicoding.mybottomnavtest.viewmodel.MainViewModel
+import com.dicoding.mybottomnavtest.viewmodel.ViewModelFactory
 
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
@@ -38,7 +38,7 @@ class RegisterFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }

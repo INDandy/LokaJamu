@@ -4,49 +4,122 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.dicoding.mybottomnavtest.MainActivity
+import com.dicoding.mybottomnavtest.api.ApiClient
+import com.dicoding.mybottomnavtest.databinding.FragmentSettingsBinding
+import com.dicoding.mybottomnavtest.preference.UserPreference
+import com.dicoding.mybottomnavtest.preference.dataStore
+import com.dicoding.mybottomnavtest.viewmodel.UserViewModel
+import kotlinx.coroutines.launch
 
-import com.dicoding.mybottomnavtest.R
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SettingsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SettingsFragment : Fragment() {
 
-    private lateinit var logoutButton: Button
+    private lateinit var binding: FragmentSettingsBinding
+    private lateinit var progressBar: ProgressBar
+    private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_settings, container, false)
+    ): View {
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        progressBar = binding.progressBar
 
-        // Mengakses tombol logout dari layout
-        logoutButton = view.findViewById(R.id.logoutButton)
+        val firstName = userViewModel.firstName.value
+        val lastName = userViewModel.lastName.value
+        val email = userViewModel.email.value
 
-        // Menetapkan OnClickListener untuk tombol logout
-        logoutButton.setOnClickListener {
-            // Panggil fungsi logout() dari MainActivity
-            val activity = requireActivity() as MainActivity
-            activity.logout() // Memanggil fungsi logout di MainActivity
+        if (firstName != null && lastName != null && email != null) {
+            binding.newsName.text = "$firstName $lastName"
+            binding.email.text = email
+        } else {
+            fetchUserDetails()
+        }
+        binding.logoutButton.setOnClickListener {
+            showLogoutConfirmationDialog()
         }
 
-        return view
+        return binding.root
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SettingsFragment().apply {
-                arguments = Bundle().apply {
-                    putString("param1", param1)
-                    putString("param2", param2)
+    private fun showLogoutConfirmationDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Konfirmasi Logout")
+        builder.setMessage("Apakah kamu ingin logout?")
+
+        builder.setPositiveButton("Yes") { _, _ ->
+            logout()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.show()
+    }
+
+    private fun logout() {
+        lifecycleScope.launch {
+            val userPreference = UserPreference.getInstance(requireContext().dataStore)
+            userPreference.logout()
+
+            showToast("Anda berhasil logout")
+
+            val activity = requireActivity() as MainActivity
+            activity.logout()
+        }
+    }
+
+    private fun fetchUserDetails() {
+        showLoading(true)
+
+        lifecycleScope.launch {
+            val userPreference = UserPreference.getInstance(requireContext().dataStore)
+            val token = userPreference.getToken()
+
+            if (!token.isNullOrEmpty()) {
+                try {
+                    val apiService = ApiClient.getApiService()
+                    val response = apiService.getUserDetails("Bearer $token")
+
+                    if (response.isSuccessful) {
+                        val firstName = response.body()?.data?.firstName
+                        val lastName = response.body()?.data?.lastName
+                        val email = response.body()?.data?.email
+
+                        if (!firstName.isNullOrEmpty()) {
+                            userViewModel.setUserDetails(firstName, lastName, email)
+                            binding.newsName.text = "$firstName $lastName"
+                            binding.email.text = email
+                        } else {
+                            showToast("User name is empty.")
+                        }
+                    } else {
+                        showToast("Failed to fetch user details. Status: ${response.code()}")
+                    }
+                } catch (e: Exception) {
+                    showToast("An error occurred: ${e.message}")
+                } finally {
+                    showLoading(false)
                 }
+            } else {
+                showToast("Token is missing.")
+                showLoading(false)
             }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

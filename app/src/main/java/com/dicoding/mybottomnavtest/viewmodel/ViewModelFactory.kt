@@ -1,11 +1,10 @@
-package com.dicoding.mybottomnavtest
+package com.dicoding.mybottomnavtest.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.mybottomnavtest.di.Injection
 import com.dicoding.mybottomnavtest.repository.UserRepository
-import com.dicoding.mybottomnavtest.viewmodel.MainViewModel
 
 class ViewModelFactory(private val repository: UserRepository) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
