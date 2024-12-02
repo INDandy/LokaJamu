@@ -13,7 +13,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.adapter.HomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeRvAdapter
 import com.dicoding.mybottomnavtest.api.ApiClient
@@ -39,9 +38,9 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        progressBar = view?.findViewById(R.id.progressBar) ?: ProgressBar(requireContext())
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        progressBar = binding.progressBar
         return binding.root
     }
 
@@ -76,6 +75,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchUserDetails() {
+        showLoading(true)
+
         lifecycleScope.launch {
             val userPreference = UserPreference.getInstance(requireContext().dataStore)
             val token = userPreference.getToken()
@@ -97,9 +98,12 @@ class HomeFragment : Fragment() {
                     }
                 } catch (e: Exception) {
                     showToast("An error occurred: ${e.message}")
+                } finally {
+                    showLoading(false)
                 }
             } else {
                 showToast("Token is missing.")
+                showLoading(false)
             }
         }
     }
@@ -122,6 +126,14 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            progressBar.visibility = View.VISIBLE
+        } else {
+            progressBar.visibility = View.GONE
+        }
+    }
+
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
@@ -131,3 +143,4 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
+
