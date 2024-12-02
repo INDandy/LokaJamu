@@ -14,15 +14,40 @@ class UserRepository private constructor (private val apiService: ApiService, pr
 
     fun register(firstName: String, lastName: String, email: String, password: String, confirmPassword: String) = liveData {
         emit(ResultValue.Loading)
+
+        if (!email.contains("@")) {
+            emit(ResultValue.Error("Data Not Valid: Email harus mengandung '@'."))
+            return@liveData
+        }
+
+        val passwordRegex = Regex("^(?=.*[A-Z])(?=.*\\d).{8,}$")
+        if (!passwordRegex.matches(password)) {
+            emit(ResultValue.Error("Data Not Valid: Password Must Include 1 Capital Letter and 1 Number"))
+            return@liveData
+        }
+
+        if (password != confirmPassword) {
+            emit(ResultValue.Error("Make Sure Password and Confirm Password Match"))
+            return@liveData
+        }
+
         val request = RegisterRequest(firstName, lastName, email, password, confirmPassword)
+
         try {
             val response = apiService.register(request)
             emit(ResultValue.Success(response))
         } catch (e: HttpException) {
-            val errorMessage = e.response()?.errorBody()?.string() ?: "Unknown error"
+            val statusCode = e.code()
+            val errorMessage = when (statusCode) {
+                409 -> "Email Are Already Registered."
+                else -> e.response()?.errorBody()?.string() ?: "Unknown Error"
+            }
             emit(ResultValue.Error(errorMessage))
+        } catch (e: Exception) {
+            emit(ResultValue.Error("Unexpected Error: ${e.message}"))
         }
     }
+
 
 
     fun login(email: String, password: String) = liveData {
@@ -34,10 +59,13 @@ class UserRepository private constructor (private val apiService: ApiService, pr
 
             emit(ResultValue.Success(loginResponse))
         } catch (e: HttpException) {
-            val errorMessage = e.response()?.errorBody()?.string() ?: "Unknown error"
+            val statusCode = e.code()
+            val errorMessage = when (statusCode) {
+                400 -> "Email Are not Registered."
+                401 -> "Wrong Email or Password"
+                else -> e.response()?.errorBody()?.string() ?: "Unknown error"
+            }
             emit(ResultValue.Error(errorMessage))
-        } catch (e: Exception) {
-            emit(ResultValue.Error(e.message ?: "An error occurred"))
         }
     }
 

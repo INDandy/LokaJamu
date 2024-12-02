@@ -124,15 +124,23 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         showLoading(true)
                     }
                     is ResultValue.Success -> {
-                        val token = result.data.toString()
-                        val user = UserModel(email, password, token)
+                        val loginResponse = result.data
+                        val token = loginResponse.data?.token
 
-                        lifecycleScope.launch {
-                            val userPreference = UserPreference.getInstance(requireContext().dataStore)
-                            userPreference.saveSession(user)
+                        if (token != null) {
+                            val user = UserModel(email, password, token)
+
+                            lifecycleScope.launch {
+                                val userPreference = UserPreference.getInstance(requireContext().dataStore)
+                                userPreference.saveSession(user)
+                            }
+
+                            showLoading(false)
+                            navigateToHome()
+                        } else {
+                            showToast("Failed to retrieve token.")
+                            showLoading(false)
                         }
-                        showLoading(false)
-                        navigateToHome()
                     }
                     is ResultValue.Error -> {
                         val errorMessage = result.error
@@ -143,6 +151,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         }
     }
+
+
 
     private fun setMyButton() {
         val emailResult = emailEditText.text.toString().isNotEmpty() && emailEditText.error == null

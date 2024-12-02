@@ -22,10 +22,17 @@ class passwordview : AppCompatEditText {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val text = s.toString().trim()
-                if (text.length < 8) {
-                    setError("Password minimal 8 Karakter", null)
-                } else {
-                    error = null
+
+                val minLengthError = "Password minimal 8 karakter"
+                val uppercaseNumberError =
+                    "Password harus mengandung minimal 1 Huruf Besar dan 1 Angka"
+
+                val regex = Regex("^(?=.*[A-Z])(?=.*\\d).+$")
+
+                when {
+                    text.length < 8 -> setError(minLengthError, null)
+                    !regex.containsMatchIn(text) -> setError(uppercaseNumberError, null)
+                    else -> error = null
                 }
             }
 

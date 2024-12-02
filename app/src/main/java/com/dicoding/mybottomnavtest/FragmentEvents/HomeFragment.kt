@@ -6,16 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.adapter.HomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeRvAdapter
+import com.dicoding.mybottomnavtest.api.ApiClient
 import com.dicoding.mybottomnavtest.data.ListEventsItem
 import com.dicoding.mybottomnavtest.databinding.FragmentHomeBinding
+import com.dicoding.mybottomnavtest.preference.UserPreference
+import com.dicoding.mybottomnavtest.preference.dataStore
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment() {
@@ -24,7 +30,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var homeAdapter: HomeAdapter
-//    private lateinit var viewPager: ViewPager2
     private lateinit var progressBar: ProgressBar
     private val eventsList = mutableListOf<ListEventsItem>()
     private val filteredEventsList = mutableListOf<ListEventsItem>()
@@ -48,9 +53,8 @@ class HomeFragment : Fragment() {
         homeAdapter = HomeAdapter(filteredEventsList, this)
         binding.rvRecipes.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecipes.adapter = eventAdapter
-//        viewPager = binding.viewPager2
 
-//        fetchEvents()
+        fetchUserDetails()
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -64,47 +68,41 @@ class HomeFragment : Fragment() {
                 return true
             }
         })
+
         binding.searchView.setOnClickListener {
             binding.searchView.isIconified = false
             binding.searchView.requestFocus()
-
         }
     }
 
-//    private fun fetchEvents() {
-//        val binding = binding
-//        binding?.progressBar?.visibility = View.VISIBLE
-//
-//        ApiClient.ApiService().getEvents().enqueue(object : Callback<ListEvent> {
-//            override fun onResponse(call: Call<ListEvent>, response: Response<ListEvent>) {
-//                if (response.isSuccessful) {
-//                    val eventList = response.body()?.listEvents ?: emptyList()
-//
-//                    homeAdapter = HomeAdapter(eventList, this@HomeFragment)
-////                    viewPager.adapter = homeAdapter
-//
-//                    val handler = Handler(Looper.getMainLooper())
-//                    val runnable = object : Runnable {
-//                        override fun run() {
-//                            val currentItem = viewPager.currentItem
-//                            val nextItem = if (currentItem == eventList.size - 1) 0 else currentItem + 1
-//                            viewPager.setCurrentItem(nextItem, true)
-//                            handler.postDelayed(this, 3000)
-//                        }
-//                    }
-//                    handler.postDelayed(runnable, 3000)
-//
-//                    binding?.progressBar?.visibility = View.GONE
-//                } else {
-//                    binding?.progressBar?.visibility = View.GONE
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ListEvent>, t: Throwable) {
-//                binding?.progressBar?.visibility = View.GONE
-//            }
-//        })
-//    }
+    private fun fetchUserDetails() {
+        lifecycleScope.launch {
+            val userPreference = UserPreference.getInstance(requireContext().dataStore)
+            val token = userPreference.getToken()
+
+            if (!token.isNullOrEmpty()) {
+                try {
+                    val apiService = ApiClient.getApiService()
+                    val response = apiService.getUserDetails("Bearer $token")
+
+                    if (response.isSuccessful) {
+                        val firstName = response.body()?.data?.firstName
+                        if (!firstName.isNullOrEmpty()) {
+                            binding.newsName.text = "$firstName"
+                        } else {
+                            showToast("User name is empty.")
+                        }
+                    } else {
+                        showToast("Failed to fetch user details. Status: ${response.code()}")
+                    }
+                } catch (e: Exception) {
+                    showToast("An error occurred: ${e.message}")
+                }
+            } else {
+                showToast("Token is missing.")
+            }
+        }
+    }
 
     private fun filterEvents(query: String) {
         val filteredList = if (query.isEmpty()) {
@@ -122,6 +120,10 @@ class HomeFragment : Fragment() {
         } else {
             binding.noDataMessage.visibility = View.GONE
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
