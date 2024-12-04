@@ -14,10 +14,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.mybottomnavtest.R
+import com.dicoding.mybottomnavtest.adapter.ArticleHomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeRvAdapter
+import com.dicoding.mybottomnavtest.adapter.LatestNewsAdapter
+import com.dicoding.mybottomnavtest.adapter.NewsAdapter
+import com.dicoding.mybottomnavtest.adapter.RecipeAdapter
+import com.dicoding.mybottomnavtest.adapter.SpiceAdapter
 import com.dicoding.mybottomnavtest.api.ApiClient
+import com.dicoding.mybottomnavtest.data.ArticleData
 import com.dicoding.mybottomnavtest.data.ListEventsItem
+import com.dicoding.mybottomnavtest.data.RecipeData
+import com.dicoding.mybottomnavtest.data.SpiceData
 import com.dicoding.mybottomnavtest.databinding.FragmentHomeBinding
 import com.dicoding.mybottomnavtest.preference.UserPreference
 import com.dicoding.mybottomnavtest.preference.dataStore
@@ -38,6 +47,10 @@ class HomeFragment : Fragment() {
     val events: LiveData<List<ListEventsItem>> = _events
     private val userViewModel: UserViewModel by activityViewModels()
 
+    private lateinit var recipeAdapter: RecipeAdapter
+    private lateinit var spiceAdapter: SpiceAdapter
+    private lateinit var homeArticelAdapter: ArticleHomeAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,31 +70,139 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        eventAdapter = HomeRvAdapter(eventsList, this)
-        homeAdapter = HomeAdapter(eventsList, this)
-        homeAdapter = HomeAdapter(filteredEventsList, this)
-        binding.rvRecipes.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvRecipes.adapter = eventAdapter
+        binding.rvRecipesHome.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        setRecipeAdapter()
 
-        fetchUserDetails()
+        binding.rvSpicesHome.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        setSpiceAdapter()
 
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
+        binding.rvArticlesHome.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        setArticleAdapter()
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let {
-                    filterEvents(it)
-                }
-                return true
-            }
-        })
+//        eventAdapter = HomeRvAdapter(eventsList, this)
+//        homeAdapter = HomeAdapter(eventsList, this)
+//        homeAdapter = HomeAdapter(filteredEventsList, this)
+//        binding.rvRecipesHome.layoutManager = LinearLayoutManager(requireContext())
+//        binding.rvRecipesHome.adapter = eventAdapter
+//
+//        fetchUserDetails()
+//
+//        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                newText?.let {
+//                    filterEvents(it)
+//                }
+//                return true
+//            }
+//        })
+//
+//        binding.searchView.setOnClickListener {
+//            binding.searchView.isIconified = false
+//            binding.searchView.requestFocus()
+//        }
+    }
 
-        binding.searchView.setOnClickListener {
-            binding.searchView.isIconified = false
-            binding.searchView.requestFocus()
+    private fun setRecipeAdapter() {
+        val dataList: MutableList<RecipeData> = mutableListOf()
+
+        recipeNameDummy().forEachIndexed { index, name ->
+            dataList.add(
+                RecipeData(
+                    index,
+                    name,
+                    ImageDummy()[index],
+                    recipeDescriptionDummy()[index],
+                    recipeBenefitDummy()[index]
+                )
+            )
         }
+
+        recipeAdapter = RecipeAdapter(context, dataList)
+        binding.rvRecipesHome.adapter = recipeAdapter
+    }
+
+    private fun setSpiceAdapter() {
+        val dataList: MutableList<SpiceData> = mutableListOf()
+
+        spiceNameDummy().forEachIndexed { index, name ->
+            dataList.add(
+                SpiceData(
+                    index,
+                    name,
+                    ImageDummy()[index],
+                    spiceDescriptionDummy()[index],
+                    spiceBenefitDummy()[index]
+                )
+            )
+        }
+
+        spiceAdapter = SpiceAdapter(context, dataList)
+        binding.rvSpicesHome.adapter = spiceAdapter
+    }
+
+    private fun setArticleAdapter() {
+        val dataList: MutableList<ArticleData> = mutableListOf()
+
+        articleTitleDummy().forEachIndexed { index, title ->
+            dataList.add(
+                ArticleData(
+                    index,
+                    ImageDummy()[index],
+                    title,
+                    articleDateDummy()[index],
+                    articleAuthorDummy()[index],
+                    articleContentDummy()[index]
+                )
+            )
+        }
+
+        homeArticelAdapter = ArticleHomeAdapter(context, dataList)
+        binding.rvArticlesHome.adapter = homeArticelAdapter
+    }
+
+
+    private fun recipeNameDummy(): Array<String> {
+        return resources.getStringArray(R.array.RecipeName)
+    }
+    private fun ImageDummy(): List<Int> {
+        return listOf(
+            R.drawable.image_article_1,
+            R.drawable.image_article_2,
+            R.drawable.image_article_3,
+            R.drawable.image_article_3,
+            R.drawable.image_article_3
+        )
+    }
+    private fun recipeDescriptionDummy(): Array<String> {
+        return resources.getStringArray(R.array.RecipeDescription)
+    }
+    private fun recipeBenefitDummy(): Array<String> {
+        return resources.getStringArray(R.array.RecipeBenefit)
+    }
+    private fun spiceNameDummy(): Array<String> {
+        return resources.getStringArray(R.array.SpiceName)
+    }
+    private fun spiceDescriptionDummy(): Array<String> {
+        return resources.getStringArray(R.array.SpiceDescription)
+    }
+    private fun spiceBenefitDummy(): Array<String> {
+        return resources.getStringArray(R.array.SpiceBenefit)
+    }
+    private fun articleTitleDummy(): Array<String> {
+        return resources.getStringArray(R.array.articleTitle)
+    }
+    private fun articleDateDummy(): Array<String> {
+        return resources.getStringArray(R.array.articleDate)
+    }
+    private fun articleAuthorDummy(): Array<String> {
+        return resources.getStringArray(R.array.articleAuthor)
+    }
+    private fun articleContentDummy(): Array<String> {
+        return resources.getStringArray(R.array.articleContent)
     }
 
     private fun fetchUserDetails() {
@@ -130,11 +251,11 @@ class HomeFragment : Fragment() {
 
         homeAdapter.updateData(filteredList)
 
-        if (filteredList.isEmpty()) {
-            binding.noDataMessage.visibility = View.VISIBLE
-        } else {
-            binding.noDataMessage.visibility = View.GONE
-        }
+//        if (filteredList.isEmpty()) {
+//            binding.noDataMessage.visibility = View.VISIBLE
+//        } else {
+//            binding.noDataMessage.visibility = View.GONE
+//        }
     }
 
     private fun showLoading(isLoading: Boolean) {
