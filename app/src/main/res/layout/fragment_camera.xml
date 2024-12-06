@@ -5,12 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".FragmentEvents.CameraFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="TAMPILAN KAMERA" />
+        android:layout_height="match_parent" />
+
 
 </FrameLayout>

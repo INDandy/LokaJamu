@@ -19,7 +19,6 @@ import com.dicoding.mybottomnavtest.adapter.ArticleHomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeRvAdapter
 import com.dicoding.mybottomnavtest.adapter.LatestNewsAdapter
-import com.dicoding.mybottomnavtest.adapter.NewsAdapter
 import com.dicoding.mybottomnavtest.adapter.RecipeAdapter
 import com.dicoding.mybottomnavtest.adapter.SpiceAdapter
 import com.dicoding.mybottomnavtest.api.ApiClient

@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "list_events_item")
 data class EventDetail(
 	@PrimaryKey(autoGenerate = true)
+
 	@field:SerializedName("id")
 	val id: Int,
 

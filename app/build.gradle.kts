@@ -84,8 +84,25 @@ dependencies {
     implementation(libs.androidx.datastore.preferences) // For Preferences DataStore
     implementation(libs.androidx.datastore.core) // For Proto DataStore
 
-}
+    //CAMERAX
+    // Core library for CameraX
+    implementation ("androidx.camera:camera-core:1.4.0")
 
+    // CameraX Camera2 interop library
+    implementation ("androidx.camera:camera-camera2:1.4.0")
+
+    // CameraX Lifecycle library
+    implementation ("androidx.camera:camera-lifecycle:1.4.0")
+
+    // CameraX View library for PreviewView
+    implementation ("androidx.camera:camera-view:1.4.0")
+
+    // CameraX Extensions (Optional: for HDR, Night Mode, etc.)
+    implementation ("androidx.camera:camera-extensions:1.4.0")
+
+    // Optional - for image analysis (if needed)
+    implementation ("androidx.camera:camera-mlkit-vision:1.4.0")
 
     
 
+}

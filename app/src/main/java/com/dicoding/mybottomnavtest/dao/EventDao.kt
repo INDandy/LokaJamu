@@ -1,26 +1,24 @@
 package com.dicoding.mybottomnavtest.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.dicoding.mybottomnavtest.data.Event
 
 
 @Dao
 interface EventDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(event: Event)
 
-    @Query("DELETE FROM events WHERE id = :eventId")
-    suspend fun delete(eventId: Int)
-
-    @Query("SELECT COUNT(*) FROM events WHERE id = :eventId")
-    suspend fun isFavorite(eventId: Int): Int
-
-    @Query("SELECT * FROM events WHERE isFavorite = 1")
-    fun getAllFavorites(): LiveData<List<Event>>
-
-
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun insert(article: ArticlesItem) // Insert ArticlesItem, which is annotated with @Entity
+//
+//    @Query("DELETE FROM events WHERE id = :eventId")
+//    suspend fun delete(eventId: Int)
+//
+//    @Query("SELECT COUNT(*) FROM events WHERE id = :eventId AND isFavorite = 1")
+//    suspend fun isFavorite(eventId: Int): Int
+//
+//    @Query("SELECT * FROM events WHERE isFavorite = 1")
+//    fun getAllFavorites(): LiveData<List<ArticlesItem>> // Returning a List of ArticlesItem
 }
+
+
+
+
