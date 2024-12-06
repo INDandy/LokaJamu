@@ -43,10 +43,10 @@
     <string name="settings">Settings</string>
     <string name="no_notifications_yet">No notifications yet</string>
     <string name="favorite">favorite</string>
-    <string name="base_url">https://event-api.dicoding.dev/</string>
+    <string name="base_url">https://loka-jamu-testing.et.r.appspot.com/</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="daily_reminder">Daily Reminder</string>
-    <string name="event_time_format">%1$s - %2$s</string>
+    <string name="event_time_format">%1$s</string>
     <string name="event_quota_format">Quota: %1$d</string>
     <string name="event_description_format">%1$s</string>
     <string name="delete_event">Hapus</string>

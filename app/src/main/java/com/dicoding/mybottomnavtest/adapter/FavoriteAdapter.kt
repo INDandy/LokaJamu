@@ -28,7 +28,7 @@ class FavoriteEventAdapter(
 
     inner class FavoriteViewHolder(private val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(event: Event) {
-            binding.tvArticleTitle.text = event.name
+            binding.tvNewsArticleTitle.text = event.name
 
 
             Glide.with(binding.root.context)

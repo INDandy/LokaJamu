@@ -1,18 +1,22 @@
 package com.dicoding.mybottomnavtest.adapter
 
+import android.content.Intent
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.dicoding.mybottomnavtest.data.ArticleData
+import com.bumptech.glide.Glide
+import com.dicoding.mybottomnavtest.DetailActivity
+import com.dicoding.mybottomnavtest.NewsResponse.ArticlesItem
 import com.dicoding.mybottomnavtest.databinding.ItemLatestNewsBinding
 
-class LatestNewsAdapter(private val items: List<ArticleData>) :
-    RecyclerView.Adapter<LatestNewsAdapter.ViewHolder>(){
+class LatestNewsAdapter(
+    private var items: List<ArticlesItem>
+) : RecyclerView.Adapter<LatestNewsAdapter.ViewHolder>() {
 
-    class ViewHolder(val binding: ItemLatestNewsBinding): RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ItemLatestNewsBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemLatestNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,14 +28,22 @@ class LatestNewsAdapter(private val items: List<ArticleData>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(holder) {
-            with(items[position]) {
-                binding.tvLatestArticleTitle.text = this.title
-                binding.ivLatestArticle.setImageResource(this.image)
+        val article = items[position]
+        with(holder.binding) {
+            tvLatestArticleTitle.text = article.title
 
-                //set image exposure
-                val exposure = 0.7f
-                adjustExposure(binding.ivLatestArticle, exposure)
+            Glide.with(ivLatestArticle.context)
+                .load(article.imageUrl)
+                .into(ivLatestArticle)
+
+            val exposure = 0.7f
+            adjustExposure(ivLatestArticle, exposure)
+
+            root.setOnClickListener {
+                val context = it.context
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("ARTICLE_ID", article.id ?: -1)
+                context.startActivity(intent)
             }
         }
     }
@@ -50,3 +62,4 @@ class LatestNewsAdapter(private val items: List<ArticleData>) :
         iv.colorFilter = colorFilter
     }
 }
+

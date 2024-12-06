@@ -5,7 +5,7 @@
     tools:context=".FragmentEvents.FavoriteFragment"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/white">
+    android:background="@color/bone_white">
 
     <TextView
         android:id="@+id/tv_bookmarks_title"
@@ -53,6 +53,7 @@
         app:tabIndicatorGravity="stretch"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/bone_white"
+        android:backgroundTint="@color/bone_white"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.viewpager2.widget.ViewPager2

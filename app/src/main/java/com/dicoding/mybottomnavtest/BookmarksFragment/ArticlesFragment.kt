@@ -1,21 +1,21 @@
 package com.dicoding.mybottomnavtest.BookmarksFragment
 
+//import com.dicoding.mybottomnavtest.adapter.ArticleAdapter
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.mybottomnavtest.R
-import com.dicoding.mybottomnavtest.adapter.ArticleAdapter
 import com.dicoding.mybottomnavtest.data.Article
 
 class ArticlesFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var articleAdapter: ArticleAdapter
+//    private lateinit var articleAdapter: ArticleAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +38,7 @@ class ArticlesFragment : Fragment() {
 
         Log.d("ArticlesFragment", "Number of articles: ${articles.size}") // Debug log
 
-        articleAdapter = ArticleAdapter(articles)
-        recyclerView.adapter = articleAdapter
+//        articleAdapter = ArticleAdapter(articles)
+//        recyclerView.adapter = articleAdapter
     }
 }
