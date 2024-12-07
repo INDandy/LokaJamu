@@ -1,26 +1,28 @@
 package com.dicoding.mybottomnavtest.FragmentEvents
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.mybottomnavtest.ArticleActivity
 import com.dicoding.mybottomnavtest.R
-import com.dicoding.mybottomnavtest.adapter.ArticleHomeAdapter
+import com.dicoding.mybottomnavtest.RecipeActivity
+import com.dicoding.mybottomnavtest.SpiceActivity
+import com.dicoding.mybottomnavtest.adapter.HomeArticleAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeRvAdapter
-import com.dicoding.mybottomnavtest.adapter.LatestNewsAdapter
-import com.dicoding.mybottomnavtest.adapter.RecipeAdapter
-import com.dicoding.mybottomnavtest.adapter.SpiceAdapter
+import com.dicoding.mybottomnavtest.adapter.HomeRecipeAdapter
+import com.dicoding.mybottomnavtest.adapter.HomeSpiceAdapter
 import com.dicoding.mybottomnavtest.api.ApiClient
 import com.dicoding.mybottomnavtest.data.ArticleData
 import com.dicoding.mybottomnavtest.data.ListEventsItem
@@ -33,7 +35,7 @@ import com.dicoding.mybottomnavtest.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), View.OnClickListener {
 
     private lateinit var eventAdapter: HomeRvAdapter
     private var _binding: FragmentHomeBinding? = null
@@ -46,9 +48,9 @@ class HomeFragment : Fragment() {
     val events: LiveData<List<ListEventsItem>> = _events
     private val userViewModel: UserViewModel by activityViewModels()
 
-    private lateinit var recipeAdapter: RecipeAdapter
-    private lateinit var spiceAdapter: SpiceAdapter
-    private lateinit var homeArticelAdapter: ArticleHomeAdapter
+    private lateinit var homeRecipeAdapter: HomeRecipeAdapter
+    private lateinit var homeSpiceAdapter: HomeSpiceAdapter
+    private lateinit var homeArticleAdapter: HomeArticleAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,6 +79,10 @@ class HomeFragment : Fragment() {
 
         binding.rvArticlesHome.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         setArticleAdapter()
+
+        binding.tvSeeAllRecipes.setOnClickListener(this)
+        binding.tvSeeAllSpices.setOnClickListener(this)
+        binding.tvSeeAllArticles.setOnClickListener(this)
 
 //        eventAdapter = HomeRvAdapter(eventsList, this)
 //        homeAdapter = HomeAdapter(eventsList, this)
@@ -120,8 +126,8 @@ class HomeFragment : Fragment() {
             )
         }
 
-        recipeAdapter = RecipeAdapter(context, dataList)
-        binding.rvRecipesHome.adapter = recipeAdapter
+        homeRecipeAdapter = HomeRecipeAdapter(context, dataList)
+        binding.rvRecipesHome.adapter = homeRecipeAdapter
     }
 
     private fun setSpiceAdapter() {
@@ -139,8 +145,8 @@ class HomeFragment : Fragment() {
             )
         }
 
-        spiceAdapter = SpiceAdapter(context, dataList)
-        binding.rvSpicesHome.adapter = spiceAdapter
+        homeSpiceAdapter = HomeSpiceAdapter(context, dataList)
+        binding.rvSpicesHome.adapter = homeSpiceAdapter
     }
 
     private fun setArticleAdapter() {
@@ -159,8 +165,8 @@ class HomeFragment : Fragment() {
             )
         }
 
-        homeArticelAdapter = ArticleHomeAdapter(context, dataList)
-        binding.rvArticlesHome.adapter = homeArticelAdapter
+        homeArticleAdapter = HomeArticleAdapter(context, dataList)
+        binding.rvArticlesHome.adapter = homeArticleAdapter
     }
 
 
@@ -272,6 +278,23 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onClick(p0: View) {
+        when(p0.id) {
+            R.id.tv_see_all_recipes -> {
+                val intent = Intent(context, RecipeActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.tv_see_all_spices -> {
+                val intent = Intent(context, SpiceActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.tv_see_all_articles -> {
+                val intent = Intent(context, ArticleActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 }
 

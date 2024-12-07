@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.mybottomnavtest.data.RecipeData
-import com.dicoding.mybottomnavtest.databinding.ItemSpiceRecipeListBinding
+import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
 
-class RecipeAdapter(val context: Context?, private val items: List<RecipeData>) :
-    RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
+class HomeRecipeAdapter(val context: Context?, private val items: List<RecipeData>) :
+    RecyclerView.Adapter<HomeRecipeAdapter.ViewHolder>() {
 
-    class ViewHolder(val binding: ItemSpiceRecipeListBinding): RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ItemHomeHorizontalBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemSpiceRecipeListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemHomeHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -24,8 +24,8 @@ class RecipeAdapter(val context: Context?, private val items: List<RecipeData>) 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(items[position]) {
-                binding.tvRecipeSpice.text = this.name
-                binding.ivRecipeSpice.setImageResource(this.image)
+                binding.tvHomeHorizontal.text = this.name
+                binding.ivHomeHorizontal.setImageResource(this.image)
 
 //                binding.root.setOnClickListener {
 //                    val bundle = Bundle()
