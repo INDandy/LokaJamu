@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.mybottomnavtest.data.ArticleData
 import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
 
-class ArticleHomeAdapter(val context: Context?, private val items: List<ArticleData>) :
-    RecyclerView.Adapter<ArticleHomeAdapter.ViewHolder>() {
+class HomeArticleAdapter(val context: Context?, private val items: List<ArticleData>) :
+    RecyclerView.Adapter<HomeArticleAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemHomeHorizontalBinding): RecyclerView.ViewHolder(binding.root)
 
