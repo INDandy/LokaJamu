@@ -31,9 +31,7 @@ class NewsFragment : Fragment() {
         binding = FragmentNewsBinding.inflate(inflater, container, false)
 
         binding.rvArticleList.layoutManager = LinearLayoutManager(requireContext())
-        articlesAdapter = ArticlesAdapter(emptyList()) { article ->
-            openArticleDetail(article)
-        }
+        articlesAdapter = ArticlesAdapter(emptyList()) { article -> openArticleDetail(article) }
         binding.rvArticleList.adapter = articlesAdapter
 
         binding.rvLatestArticle.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -41,21 +39,23 @@ class NewsFragment : Fragment() {
         binding.rvLatestArticle.adapter = latestNewsAdapter
 
         newsViewModel.articlesLiveData.observe(viewLifecycleOwner) { articles ->
-            articlesAdapter = ArticlesAdapter(articles) { article ->
-                openArticleDetail(article)
-            }
+            articlesAdapter = ArticlesAdapter(articles) { article -> openArticleDetail(article) }
             binding.rvArticleList.adapter = articlesAdapter
+            binding.loading.visibility = View.GONE
         }
 
         newsViewModel.latestNewsLiveData.observe(viewLifecycleOwner) { latestNews ->
             latestNewsAdapter = LatestNewsAdapter(latestNews)
             binding.rvLatestArticle.adapter = latestNewsAdapter
+            binding.loading.visibility = View.GONE
         }
 
         newsViewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+            binding.loading.visibility = View.GONE
         }
 
+        binding.loading.visibility = View.VISIBLE
         newsViewModel.fetchArticles()
         newsViewModel.fetchLatestNews()
 
@@ -68,5 +68,6 @@ class NewsFragment : Fragment() {
         startActivity(intent)
     }
 }
+
 
 

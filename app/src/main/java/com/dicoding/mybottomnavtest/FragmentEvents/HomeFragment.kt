@@ -1,24 +1,24 @@
 package com.dicoding.mybottomnavtest.FragmentEvents
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.mybottomnavtest.FragmentLogin.LoginFragment
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.adapter.ArticleHomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeRvAdapter
-import com.dicoding.mybottomnavtest.adapter.LatestNewsAdapter
 import com.dicoding.mybottomnavtest.adapter.RecipeAdapter
 import com.dicoding.mybottomnavtest.adapter.SpiceAdapter
 import com.dicoding.mybottomnavtest.api.ApiClient
@@ -226,18 +226,37 @@ class HomeFragment : Fragment() {
                         }
                     } else {
                         showToast("Failed to fetch user details. Status: ${response.code()}")
+                        logoutAndRedirectToLogin()
                     }
                 } catch (e: Exception) {
                     showToast("An error occurred: ${e.message}")
+                    logoutAndRedirectToLogin()
                 } finally {
                     showLoading(false)
                 }
             } else {
                 showToast("Token is missing.")
+                logoutAndRedirectToLogin()
                 showLoading(false)
             }
         }
     }
+
+    private fun logoutAndRedirectToLogin() {
+        lifecycleScope.launch {
+            val userPreference = UserPreference.getInstance(requireContext().dataStore)
+            userPreference.logout()
+        }
+
+        val intent = Intent(requireContext(), LoginFragment::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+
+        requireActivity().finish()
+    }
+
+
+
 
     private fun filterEvents(query: String) {
         val filteredList = if (query.isEmpty()) {
