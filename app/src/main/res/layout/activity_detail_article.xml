@@ -17,6 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/bone_white"
             app:titleTextColor="@color/hijau"/>
 
     </com.google.android.material.appbar.AppBarLayout>
