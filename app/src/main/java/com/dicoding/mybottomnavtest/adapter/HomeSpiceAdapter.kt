@@ -4,12 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.dicoding.mybottomnavtest.data.RecipeData
 import com.dicoding.mybottomnavtest.data.SpiceData
 import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
 
-class SpiceAdapter(val context: Context?, private val items: List<SpiceData>) :
-    RecyclerView.Adapter<SpiceAdapter.ViewHolder>() {
+class HomeSpiceAdapter(val context: Context?, private val items: List<SpiceData>) :
+    RecyclerView.Adapter<HomeSpiceAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemHomeHorizontalBinding): RecyclerView.ViewHolder(binding.root)
 

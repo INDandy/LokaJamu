@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.mybottomnavtest.data.RecipeData
 import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
 
-class RecipeAdapter(val context: Context?, private val items: List<RecipeData>) :
-    RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
+class HomeRecipeAdapter(val context: Context?, private val items: List<RecipeData>) :
+    RecyclerView.Adapter<HomeRecipeAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemHomeHorizontalBinding): RecyclerView.ViewHolder(binding.root)
 
