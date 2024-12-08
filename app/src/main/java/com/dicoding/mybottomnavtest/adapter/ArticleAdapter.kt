@@ -53,8 +53,8 @@ class ArticlesAdapter(
 
     override fun getItemCount(): Int = articles.size
 
-    fun updateArticles(newArticles: List<ArticlesItem>) {
-        articles = newArticles
+    fun updateArticles(newArticles: Any) {
+        articles = newArticles as List<ArticlesItem>
         notifyDataSetChanged()
     }
 }

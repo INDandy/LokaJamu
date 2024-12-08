@@ -10,9 +10,10 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.mybottomnavtest.ArticleActivity
@@ -48,7 +49,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private val filteredEventsList = mutableListOf<ListEventsItem>()
     private val _events = MutableLiveData<List<ListEventsItem>>()
     val events: LiveData<List<ListEventsItem>> = _events
-    private val userViewModel: UserViewModel by activityViewModels()
+    private lateinit var userViewModel: UserViewModel
 
     private lateinit var homeRecipeAdapter: HomeRecipeAdapter
     private lateinit var homeSpiceAdapter: HomeSpiceAdapter
@@ -58,6 +59,13 @@ class HomeFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
+
+        userViewModel.userDetailsStatus.observe(viewLifecycleOwner, Observer { status ->
+            if (status == false) {
+                showSessionExpiredDialog()
+            }
+        })
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         progressBar = binding.progressBar
         val firstName = userViewModel.firstName.value
@@ -227,7 +235,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     if (response.isSuccessful) {
                         val firstName = response.body()?.data?.firstName
                         if (!firstName.isNullOrEmpty()) {
-                            userViewModel.setUserDetailsHome(firstName)
+                            userViewModel.setUserDetailsStatus(true)
                             binding.newsName.text = "$firstName"
                         } else {
                             showSessionExpiredDialog()
@@ -246,6 +254,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
         }
     }
+
 
     private fun showSessionExpiredDialog() {
         val mainActivity = activity as? MainActivity

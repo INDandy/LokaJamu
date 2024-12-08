@@ -8,7 +8,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.dicoding.mybottomnavtest.MainActivity
 import com.dicoding.mybottomnavtest.api.ApiClient
@@ -22,12 +22,15 @@ class SettingsFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var progressBar: ProgressBar
-    private val userViewModel: UserViewModel by activityViewModels()
+    private lateinit var userViewModel: UserViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
+
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
         progressBar = binding.progressBar
 
@@ -44,6 +47,10 @@ class SettingsFragment : Fragment() {
         binding.logoutButton.setOnClickListener {
             showLogoutConfirmationDialog()
         }
+
+        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
+
+        fetchUserDetails()
 
         return binding.root
     }

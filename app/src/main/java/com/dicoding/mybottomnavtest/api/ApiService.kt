@@ -44,7 +44,11 @@ interface ApiService {
     @GET("api/articles/{id}")
     suspend fun getArticleById(@Path("id") id: Int): Response<ArticleDetailResponse>
 
-
+    @POST("api/users/{id}/bookmark-articles")
+    suspend fun bookmarkArticle(
+        @Path("id") userId: String,
+        @Body articleId: Map<String, Int>
+    ): Response<NewsResponse>
 }
 
 

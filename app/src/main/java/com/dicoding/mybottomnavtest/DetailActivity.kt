@@ -13,9 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.dicoding.mybottomnavtest.api.ApiClient
+import com.dicoding.mybottomnavtest.preference.UserPreference
+import com.dicoding.mybottomnavtest.preference.dataStore
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -32,6 +35,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var toolbar: Toolbar
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_article)
@@ -45,6 +49,16 @@ class DetailActivity : AppCompatActivity() {
         fabBookmark = findViewById(R.id.fab_bookmark)
         progressBar = findViewById(R.id.progressBar)
         toolbar = findViewById(R.id.toolbar)
+
+        fabBookmark = findViewById(R.id.fab_bookmark)
+
+        fabBookmark.setOnClickListener {
+            val articleId = intent.getIntExtra("EVENT_ID", -1)
+            if (articleId != -1) {
+                addArticleToBookmark(articleId)
+            }
+        }
+
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -61,7 +75,7 @@ class DetailActivity : AppCompatActivity() {
                     val response = ApiClient.getApiService().getArticleById(articleId)
 
                     if (response.isSuccessful) {
-                        val article = response.body()?.data?.article // Now accessing the article directly
+                        val article = response.body()?.data?.article
 
                         progressBar.visibility = View.GONE
 
@@ -74,7 +88,7 @@ class DetailActivity : AppCompatActivity() {
 
                             Glide.with(this@DetailActivity)
                                 .load(it.imageUrl)
-                                .placeholder(R.drawable.ic_profile_black) // Optional placeholder
+                                .placeholder(R.drawable.ic_profile_black)
                                 .into(ivArticleDetail)
 
                             it.tags?.forEach { tag ->
@@ -102,6 +116,34 @@ class DetailActivity : AppCompatActivity() {
             Toast.makeText(this, "Invalid article ID", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun addArticleToBookmark(articleId: Int) {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val userPreference = UserPreference.getInstance(applicationContext.dataStore)
+
+                val token = userPreference.getToken()
+
+                if (token.isNullOrEmpty()) {
+                    Toast.makeText(this@DetailActivity, "User not authenticated", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+
+                val articleIdMap = mapOf("articleId" to articleId)
+
+                val response = ApiClient.getApiService().bookmarkArticle(token, articleIdMap)
+
+                if (response.isSuccessful) {
+                    Toast.makeText(this@DetailActivity, "Article bookmarked", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@DetailActivity, "Failed to bookmark article", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@DetailActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {

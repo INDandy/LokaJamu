@@ -49,3 +49,5 @@ data class ContentsItem(
 	@field:SerializedName("type")
 	val type: String? = null
 )
+
+
