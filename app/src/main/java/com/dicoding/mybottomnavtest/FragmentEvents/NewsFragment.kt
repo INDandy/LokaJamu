@@ -34,20 +34,21 @@ class NewsFragment : Fragment() {
         articlesAdapter = ArticlesAdapter(emptyList()) { article -> openArticleDetail(article) }
         binding.rvArticleList.adapter = articlesAdapter
 
-        binding.rvLatestArticle.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        latestNewsAdapter = LatestNewsAdapter(emptyList())
-        binding.rvLatestArticle.adapter = latestNewsAdapter
-
         newsViewModel.articlesLiveData.observe(viewLifecycleOwner) { articles ->
             articlesAdapter = ArticlesAdapter(articles) { article -> openArticleDetail(article) }
             binding.rvArticleList.adapter = articlesAdapter
             binding.loading.visibility = View.GONE
         }
 
+        binding.rvLatestArticle.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        latestNewsAdapter = LatestNewsAdapter(emptyList())
+        binding.rvLatestArticle.adapter = latestNewsAdapter
+
         newsViewModel.latestNewsLiveData.observe(viewLifecycleOwner) { latestNews ->
             latestNewsAdapter = LatestNewsAdapter(latestNews)
             binding.rvLatestArticle.adapter = latestNewsAdapter
             binding.loading.visibility = View.GONE
+
         }
 
         newsViewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->

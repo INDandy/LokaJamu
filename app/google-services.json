@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1067454578376",
+    "project_id": "applokajamu",
+    "storage_bucket": "applokajamu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067454578376:android:d663f8425af069cc3e6ffd",
+        "android_client_info": {
+          "package_name": "com.dicoding.mybottomnavtest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFvOrGxU62fsGUBU8LiUSzlAAfSP7E9xg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

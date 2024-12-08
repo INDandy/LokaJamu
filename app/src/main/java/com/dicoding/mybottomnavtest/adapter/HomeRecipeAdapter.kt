@@ -1,46 +1,47 @@
 package com.dicoding.mybottomnavtest.adapter
 
-import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.dicoding.mybottomnavtest.data.RecipeData
-import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
+import com.bumptech.glide.Glide
+import com.dicoding.mybottomnavtest.DetailActivity
+import com.dicoding.mybottomnavtest.Response.Recipe
+import com.dicoding.mybottomnavtest.databinding.ItemSpiceRecipeListBinding
 
-class HomeRecipeAdapter(val context: Context?, private val items: List<RecipeData>) :
-    RecyclerView.Adapter<HomeRecipeAdapter.ViewHolder>() {
+class HomeRecipeAdapter(
+    private var items: List<Recipe>
+) : RecyclerView.Adapter<HomeRecipeAdapter.HomeRecipeViewHolder>() {
 
-    class ViewHolder(val binding: ItemHomeHorizontalBinding): RecyclerView.ViewHolder(binding.root)
+    class HomeRecipeViewHolder(val binding: ItemSpiceRecipeListBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemHomeHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeRecipeViewHolder {
+        val binding = ItemSpiceRecipeListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return HomeRecipeViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return if (items.isEmpty()) 5 else items.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(holder) {
-            with(items[position]) {
-                binding.tvHomeHorizontal.text = this.name
-                binding.ivHomeHorizontal.setImageResource(this.image)
+    override fun onBindViewHolder(holder: HomeRecipeViewHolder, position: Int) {
+        val recipe = items[position]
+        with(holder.binding) {
+            tvRecipeSpice.text = recipe.name
 
-//                binding.root.setOnClickListener {
-//                    val bundle = Bundle()
-//                    bundle.putString("title", this.title)
-//                    bundle.putString("date", this.date)
-//                    bundle.putString("author", this.author)
-//                    bundle.putString("content", this.content)
-//                    bundle.putInt("image", this.image)
-//                    bundle.putBoolean("isFavorite", this.isFavorite)
-//
-//                    val intent = Intent(context, DetailArticleActivity::class.java)
-//                    intent.putExtras(bundle)
-//                    context?.startActivity(intent)
-//                }
+            Glide.with(ivRecipeSpice.context)
+                .load(recipe.imageUrl)
+                .into(ivRecipeSpice)
+
+            root.setOnClickListener {
+                val recipeId = recipe.id
+                val context = root.context
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("EVENT_ID", recipeId)
+                context.startActivity(intent)
             }
+
         }
     }
+
 }

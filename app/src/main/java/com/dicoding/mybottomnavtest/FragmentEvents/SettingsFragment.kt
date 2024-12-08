@@ -92,7 +92,7 @@ class SettingsFragment : Fragment() {
 
             if (!token.isNullOrEmpty()) {
                 try {
-                    val apiService = ApiClient.getApiService()
+                    val apiService = ApiClient.UserApiService()
                     val response = apiService.getUserDetails("Bearer $token")
 
                     if (response.isSuccessful) {

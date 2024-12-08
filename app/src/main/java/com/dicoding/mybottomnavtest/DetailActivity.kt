@@ -72,7 +72,7 @@ class DetailActivity : AppCompatActivity() {
 
             GlobalScope.launch(Dispatchers.Main) {
                 try {
-                    val response = ApiClient.getApiService().getArticleById(articleId)
+                    val response = ApiClient.ArticleApiService().getArticleById(articleId)
 
                     if (response.isSuccessful) {
                         val article = response.body()?.data?.article
@@ -131,7 +131,7 @@ class DetailActivity : AppCompatActivity() {
 
                 val articleIdMap = mapOf("articleId" to articleId)
 
-                val response = ApiClient.getApiService().bookmarkArticle(token, articleIdMap)
+                val response = ApiClient.BookmarkApiService().bookmarkArticle(token, articleIdMap)
 
                 if (response.isSuccessful) {
                     Toast.makeText(this@DetailActivity, "Article bookmarked", Toast.LENGTH_SHORT).show()

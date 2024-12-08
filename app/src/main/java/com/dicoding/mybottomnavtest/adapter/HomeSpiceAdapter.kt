@@ -1,46 +1,85 @@
 package com.dicoding.mybottomnavtest.adapter
 
-import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.dicoding.mybottomnavtest.data.SpiceData
-import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
+import com.bumptech.glide.Glide
+import com.dicoding.mybottomnavtest.DetailActivity
+import com.dicoding.mybottomnavtest.R
+import com.dicoding.mybottomnavtest.Response.Spice
+import com.dicoding.mybottomnavtest.databinding.ItemSpiceRecipeListBinding
 
-class HomeSpiceAdapter(val context: Context?, private val items: List<SpiceData>) :
-    RecyclerView.Adapter<HomeSpiceAdapter.ViewHolder>() {
+class HomeSpiceAdapter(
+    private var items: List<Spice> = emptyList()
+) : RecyclerView.Adapter<HomeSpiceAdapter.HomeSpiceViewHolder>() {
 
-    class ViewHolder(val binding: ItemHomeHorizontalBinding): RecyclerView.ViewHolder(binding.root)
+    class HomeSpiceViewHolder(val binding: ItemSpiceRecipeListBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemHomeHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeSpiceViewHolder {
+        val binding = ItemSpiceRecipeListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return HomeSpiceViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return if (items.isEmpty()) 5 else items.size // Default 5 items for dummy
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(holder) {
-            with(items[position]) {
-                binding.tvHomeHorizontal.text = this.name
-                binding.ivHomeHorizontal.setImageResource(this.image)
+    override fun onBindViewHolder(holder: HomeSpiceViewHolder, position: Int) {
+        if (items.isNotEmpty() && position < items.size) {
+            val spice = items[position]
+            with(holder.binding) {
+                tvRecipeSpice.text = spice.name
 
-//                binding.root.setOnClickListener {
-//                    val bundle = Bundle()
-//                    bundle.putString("title", this.title)
-//                    bundle.putString("date", this.date)
-//                    bundle.putString("author", this.author)
-//                    bundle.putString("content", this.content)
-//                    bundle.putInt("image", this.image)
-//                    bundle.putBoolean("isFavorite", this.isFavorite)
-//
-//                    val intent = Intent(context, DetailArticleActivity::class.java)
-//                    intent.putExtras(bundle)
-//                    context?.startActivity(intent)
-//                }
+                Glide.with(ivRecipeSpice.context)
+                    .load(spice.imageUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image)
+                    .into(ivRecipeSpice)
+
+                root.setOnClickListener {
+                    val spiceId = spice.id
+                    val context = root.context
+                    val intent = Intent(context, DetailActivity::class.java)
+                    intent.putExtra("EVENT_ID", spiceId)
+                    context.startActivity(intent)
+                }
+            }
+        } else {
+            // Dummy data
+            with(holder.binding) {
+                tvRecipeSpice.text = "Dummy Spice"
+
+                Glide.with(ivRecipeSpice.context)
+                    .load(R.drawable.placeholder_image)  // Replace with your dummy image resource
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image)
+                    .into(ivRecipeSpice)
+
+                root.setOnClickListener {
+                    // Optionally, do nothing or show a toast for dummy items
+                }
             }
         }
+    }
+
+    fun updateData(newItems: List<Spice>) {
+        items = if (newItems.isEmpty()) {
+            // Generate dummy items with default values
+            List(5) {
+                Spice(
+                    id = -1,
+                    name = "Dummy Spice ${it + 1}",
+                    tags = listOf("dummy", "placeholder"),
+                    imageUrl = "",
+                    description = "This is a dummy spice description.",
+                    benefits = listOf("Dummy benefit 1", "Dummy benefit 2"),
+                    jamuList = listOf("Dummy Jamu 1", "Dummy Jamu 2")
+                )
+            }
+        } else {
+            newItems
+        }
+        notifyDataSetChanged()
     }
 }
