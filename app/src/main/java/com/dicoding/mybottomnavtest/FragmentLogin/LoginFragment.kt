@@ -1,6 +1,8 @@
 package com.dicoding.mybottomnavtest.FragmentLogin
 
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -11,6 +13,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +23,6 @@ import com.dicoding.mybottomnavtest.FragmentRegister.RegisterFragment
 import com.dicoding.mybottomnavtest.MainActivity
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.UserModel
-import com.dicoding.mybottomnavtest.viewmodel.ViewModelFactory
 import com.dicoding.mybottomnavtest.customviewmodel.emailview
 import com.dicoding.mybottomnavtest.customviewmodel.passwordview
 import com.dicoding.mybottomnavtest.databinding.FragmentLoginBinding
@@ -28,6 +30,7 @@ import com.dicoding.mybottomnavtest.preference.ResultValue
 import com.dicoding.mybottomnavtest.preference.UserPreference
 import com.dicoding.mybottomnavtest.preference.dataStore
 import com.dicoding.mybottomnavtest.viewmodel.MainViewModel
+import com.dicoding.mybottomnavtest.viewmodel.ViewModelFactory
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
@@ -114,6 +117,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun login() {
+        if (!isInternetAvailable()) {
+            showNoInternetDialog()
+            return
+        }
+
         val email = binding.emailEditText.text.toString()
         val password = binding.passwordEditText.text.toString()
 
@@ -151,6 +159,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         }
     }
+
 
 
 
@@ -207,4 +216,23 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             alertDialog.dismiss()
         }, 1800)
     }
+
+    private fun showNoInternetDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("No Internet Connection")
+            .setMessage("You need an active internet connection to log in. Please check your connection and try again.")
+            .setCancelable(false)
+            .setPositiveButton("Retry") { _, _ -> login() }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+
+    private fun isInternetAvailable(): Boolean {
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
+    }
+
 }
