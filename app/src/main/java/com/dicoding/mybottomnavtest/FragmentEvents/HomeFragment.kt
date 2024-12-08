@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
@@ -15,13 +16,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.mybottomnavtest.ArticleActivity
+import com.dicoding.mybottomnavtest.MainActivity
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.RecipeActivity
 import com.dicoding.mybottomnavtest.SpiceActivity
-import com.dicoding.mybottomnavtest.adapter.HomeArticleAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeAdapter
-import com.dicoding.mybottomnavtest.adapter.HomeRvAdapter
+import com.dicoding.mybottomnavtest.adapter.HomeArticleAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeRecipeAdapter
+import com.dicoding.mybottomnavtest.adapter.HomeRvAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeSpiceAdapter
 import com.dicoding.mybottomnavtest.api.ApiClient
 import com.dicoding.mybottomnavtest.data.ArticleData
@@ -228,22 +230,38 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             userViewModel.setUserDetailsHome(firstName)
                             binding.newsName.text = "$firstName"
                         } else {
-                            showToast("User name is empty.")
+                            showSessionExpiredDialog()
                         }
                     } else {
-                        showToast("Failed to fetch user details. Status: ${response.code()}")
+                        showSessionExpiredDialog()
                     }
                 } catch (e: Exception) {
-                    showToast("An error occurred: ${e.message}")
+                    showSessionExpiredDialog()
                 } finally {
                     showLoading(false)
                 }
             } else {
-                showToast("Token is missing.")
                 showLoading(false)
+                showSessionExpiredDialog()
             }
         }
     }
+
+    private fun showSessionExpiredDialog() {
+        val mainActivity = activity as? MainActivity
+        mainActivity?.runOnUiThread {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Session Expired")
+                .setMessage("Please log in again.")
+                .setCancelable(false)
+                .setPositiveButton("Log In") { _, _ ->
+                    mainActivity.logout()
+                }
+                .show()
+        }
+    }
+
+
 
     private fun filterEvents(query: String) {
         val filteredList = if (query.isEmpty()) {
