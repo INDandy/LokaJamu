@@ -33,9 +33,10 @@ class ArticlesAdapter(
             dateTextView.text = article.createdAt
 
             itemView.setOnClickListener {
+                val articleId = article.id
                 val context = itemView.context
                 val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra("ARTICLE_ID", article.id ?: -1)
+                intent.putExtra("EVENT_ID", articleId)
                 context.startActivity(intent)
             }
         }

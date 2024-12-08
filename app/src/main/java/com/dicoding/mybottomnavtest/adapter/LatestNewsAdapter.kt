@@ -14,7 +14,7 @@ import com.dicoding.mybottomnavtest.databinding.ItemLatestNewsBinding
 
 class LatestNewsAdapter(
     private var items: List<ArticlesItem>
-) : RecyclerView.Adapter<LatestNewsAdapter.ViewHolder>() {
+    ) : RecyclerView.Adapter<LatestNewsAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemLatestNewsBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -40,9 +40,10 @@ class LatestNewsAdapter(
             adjustExposure(ivLatestArticle, exposure)
 
             root.setOnClickListener {
-                val context = it.context
+                val articleId = article.id
+                val context = root.context
                 val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra("ARTICLE_ID", article.id ?: -1)
+                intent.putExtra("EVENT_ID", articleId)
                 context.startActivity(intent)
             }
         }

@@ -18,12 +18,19 @@ class NewsViewModel : ViewModel() {
 
     val latestNewsLiveData = MutableLiveData<List<ArticlesItem>>()
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
+    private val apiService = ApiClient.getApiService()
+
     fun fetchArticles() {
         viewModelScope.launch {
             try {
                 val response = ApiClient.getApiService().getArticles()
                 if (response.isSuccessful) {
-                    _articlesLiveData.postValue((response.body()?.data?.articles ?: emptyList()) as List<ArticlesItem>?)
+                    _articlesLiveData.postValue(
+                        (response.body()?.data?.articles ?: emptyList()) as List<ArticlesItem>?
+                    )
                 } else {
                     _errorLiveData.postValue("Failed to load articles")
                 }
@@ -32,12 +39,15 @@ class NewsViewModel : ViewModel() {
             }
         }
     }
+
     fun fetchLatestNews() {
         viewModelScope.launch {
             try {
                 val response = ApiClient.getApiService().getArticles()
                 if (response.isSuccessful) {
-                    latestNewsLiveData.postValue((response.body()?.data?.articles ?: emptyList()) as List<ArticlesItem>?)
+                    latestNewsLiveData.postValue(
+                        (response.body()?.data?.articles ?: emptyList()) as List<ArticlesItem>?
+                    )
                 } else {
                     _errorLiveData.postValue("Failed to load latest news")
                 }

@@ -1,6 +1,6 @@
 package com.dicoding.mybottomnavtest.api
 
-import com.dicoding.mybottomnavtest.NewsResponse.ArticlesItem
+import com.dicoding.mybottomnavtest.NewsResponse.ArticleDetailResponse
 import com.dicoding.mybottomnavtest.NewsResponse.NewsResponse
 import com.dicoding.mybottomnavtest.Response.DataUser
 import com.dicoding.mybottomnavtest.Response.GetUsers
@@ -42,7 +42,8 @@ interface ApiService {
     suspend fun getArticles(): Response<NewsResponse>
 
     @GET("api/articles/{id}")
-    suspend fun getArticleById(@Path("id") id: Int): Response<ArticlesItem>
+    suspend fun getArticleById(@Path("id") id: Int): Response<ArticleDetailResponse>
+
 
 }
 
