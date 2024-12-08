@@ -36,12 +36,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="275dp"
                 android:adjustViewBounds="false"
+                android:background="@color/best_grey"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/image_article_1" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_article_title_detail"
@@ -49,14 +49,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:text="Article Title"
-                android:textColor="@color/bone_white"
-                android:textSize="28sp"
-                android:textStyle="bold"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="2"
+                android:textColor="@color/bone_white"
+                android:textSize="28sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_article_detail"
                 app:layout_constraintEnd_toEndOf="@+id/iv_article_detail"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -68,13 +67,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Author"
-                android:textColor="@color/bone_white"
-                android:textSize="16sp"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="2"
+                android:textColor="@color/bone_white"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/tv_article_date_detail"
                 app:layout_constraintStart_toStartOf="@+id/tv_article_date_detail" />
 
@@ -84,13 +82,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="12dp"
-                android:text="Upload Date"
-                android:textColor="@color/bone_white"
-                android:textSize="16sp"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="2"
+                android:textColor="@color/bone_white"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_article_detail"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -98,32 +95,28 @@
                 android:id="@+id/tv_article_tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
                 android:padding="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_article_content"
-                app:singleLine="true"
                 app:chipSpacingHorizontal="8dp"
-                app:chipSpacingVertical="4dp" />
+                app:chipSpacingVertical="4dp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_article_content"
+                app:layout_constraintStart_toStartOf="@+id/tv_article_content"
+                app:layout_constraintTop_toBottomOf="@+id/iv_article_detail"
+                app:singleLine="true" />
 
             <TextView
                 android:id="@+id/tv_article_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="30dp"
                 android:text="Content Here ..."
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="normal"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_article_detail" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_article_tags" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_bookmark"
@@ -133,10 +126,10 @@
                 android:backgroundTint="@color/oranye"
                 android:src="@drawable/baseline_bookmark_add_24"
                 app:fabSize="mini"
-                app:tint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_article_date_detail"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:rippleColor="@color/hijau_muda" />
+                app:rippleColor="@color/hijau_muda"
+                app:tint="@color/white" />
 
             <ProgressBar
                 android:id="@+id/progressBar"

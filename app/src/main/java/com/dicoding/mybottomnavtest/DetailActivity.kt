@@ -1,5 +1,7 @@
 package com.dicoding.mybottomnavtest
 
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -46,7 +48,8 @@ class DetailActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setTitle("Article Detail")
+
+        adjustExposure(ivArticleDetail, 0.6f)
 
         val articleId = intent.getIntExtra("EVENT_ID", -1)
 
@@ -63,6 +66,7 @@ class DetailActivity : AppCompatActivity() {
                         progressBar.visibility = View.GONE
 
                         article?.let {
+                            supportActionBar?.title = it.title
                             tvArticleTitleDetail.text = it.title
                             tvArticleAuthor.text = "Author: ${it.tags?.firstOrNull() ?: "Unknown"}"
                             tvArticleDateDetail.text = "Published: ${it.createdAt}"
@@ -77,6 +81,10 @@ class DetailActivity : AppCompatActivity() {
                                 val chip = Chip(this@DetailActivity).apply {
                                     text = tag
                                     isCheckable = false
+                                    setTextColor(getColorStateList(R.color.hijau))
+                                    chipBackgroundColor = getColorStateList(R.color.hijau_muda)
+                                    chipStrokeColor = getColorStateList(R.color.hijau)
+                                    chipStrokeWidth = 3f
                                 }
                                 tvArticleTags.addView(chip)
                             }
@@ -102,6 +110,20 @@ class DetailActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun adjustExposure(iv: ImageView, value: Float) {
+        val colorMatrix = ColorMatrix()
+        colorMatrix.set(
+            floatArrayOf(
+                value, 0f, 0f, 0f, 0f,
+                0f, value, 0f, 0f, 0f,
+                0f, 0f, value, 0f, 0f,
+                0f, 0f, 0f, 1f, 0f
+            )
+        )
+        val colorFilter = ColorMatrixColorFilter(colorMatrix)
+        iv.colorFilter = colorFilter
     }
 }
 
