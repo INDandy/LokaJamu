@@ -5,6 +5,7 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
 
+
 }
 
 android {
@@ -86,22 +87,22 @@ dependencies {
 
     //CAMERAX
     // Core library for CameraX
-    implementation ("androidx.camera:camera-core:1.4.0")
+    implementation (libs.androidx.camera.core)
 
     // CameraX Camera2 interop library
-    implementation ("androidx.camera:camera-camera2:1.4.0")
+    implementation (libs.androidx.camera.camera2)
 
     // CameraX Lifecycle library
-    implementation ("androidx.camera:camera-lifecycle:1.4.0")
+    implementation (libs.androidx.camera.lifecycle)
 
     // CameraX View library for PreviewView
-    implementation ("androidx.camera:camera-view:1.4.0")
+    implementation (libs.androidx.camera.view)
 
     // CameraX Extensions (Optional: for HDR, Night Mode, etc.)
-    implementation ("androidx.camera:camera-extensions:1.4.0")
+    implementation (libs.camera.extensions)
 
     // Optional - for image analysis (if needed)
-    implementation ("androidx.camera:camera-mlkit-vision:1.4.0")
+    implementation (libs.androidx.camera.mlkit.vision)
 
     
 

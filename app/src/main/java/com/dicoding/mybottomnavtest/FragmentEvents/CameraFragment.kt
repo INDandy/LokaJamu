@@ -1,97 +1,179 @@
 package com.dicoding.mybottomnavtest.FragmentEvents
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
+import android.os.Environment
 import android.view.View
-import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.dicoding.mybottomnavtest.CameraResult.CameraResultActivity
 import com.dicoding.mybottomnavtest.R
+import com.dicoding.mybottomnavtest.databinding.FragmentCameraBinding
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
-class CameraFragment : Fragment() {
+class CameraFragment : Fragment(R.layout.fragment_camera) {
 
-    private lateinit var viewFinder: PreviewView
-    private val CAMERA_PERMISSION_CODE = 100
+    private var _binding: FragmentCameraBinding? = null
+    private val binding get() = _binding!!
 
+    private lateinit var imageCapture: ImageCapture
+    private var cameraProvider: ProcessCameraProvider? = null
+    private var lensFacing = CameraSelector.LENS_FACING_BACK
+    private val multiplePermissionId = 14
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_camera, container, false)
+    private val multiplePermissionNameList = if (Build.VERSION.SDK_INT >= 33) {
+        arrayOf(Manifest.permission.CAMERA)
+    } else {
+        arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentCameraBinding.bind(view)
 
-        viewFinder = view.findViewById(R.id.viewFinder)
+        // Setup UI
+        setupView()
 
-        checkCameraPermission()
-        startCameraX()
+        // Check permissions
+        if (checkMultiplePermissions()) {
+            startCamera()
+        } else {
+            requestPermissions(multiplePermissionNameList, multiplePermissionId)
+        }
+
+        // Capture Button Click Listener
+        binding.captureButton.setOnClickListener {
+            takePhoto()
+        }
+
+        // Flash Toggle Click Listener
+        binding.flashToggleIB.setOnClickListener {
+            toggleFlash()
+        }
     }
 
-    private fun startCameraX() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+    private fun checkMultiplePermissions(): Boolean {
+        return multiplePermissionNameList.all {
+            ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+        }
+    }
 
+    private fun startCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
+            cameraProvider = cameraProviderFuture.get()
 
             val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(viewFinder.surfaceProvider)
+                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
             }
 
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            imageCapture = ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+                .build()
+
+            val cameraSelector = CameraSelector.Builder()
+                .requireLensFacing(lensFacing)
+                .build()
 
             try {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
+                cameraProvider?.unbindAll()
+                cameraProvider?.bindToLifecycle(
                     viewLifecycleOwner,
                     cameraSelector,
-                    preview
+                    preview,
+                    imageCapture
                 )
             } catch (e: Exception) {
-                Log.e("CameraFragment", "Use case binding failed", e)
+                Toast.makeText(requireContext(), "Error initializing camera: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-    private fun checkCameraPermission() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            startCameraX()
+    private fun takePhoto() {
+        val imageFolder = File(
+            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Images"
+        )
+        if (!imageFolder.exists()) {
+            imageFolder.mkdirs()
+        }
+
+        val fileName = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+            .format(System.currentTimeMillis()) + ".jpg"
+        val photoFile = File(imageFolder, fileName)
+
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(requireContext()),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    navigateToCameraResult(photoFile.absolutePath)
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    Toast.makeText(requireContext(), "Failed to save photo", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
+    }
+
+    private fun navigateToCameraResult(imagePath: String) {
+        val intent = Intent(requireContext(), CameraResultActivity::class.java).apply {
+            putExtra("imagePath", imagePath)
+        }
+        startActivity(intent)
+    }
+
+    private fun toggleFlash() {
+        val camera = cameraProvider?.bindToLifecycle(
+            viewLifecycleOwner,
+            CameraSelector.Builder().requireLensFacing(lensFacing).build()
+        )
+
+        if (camera != null && camera.cameraInfo.hasFlashUnit()) {
+            val isTorchOn = camera.cameraInfo.torchState.value == TorchState.ON
+            camera.cameraControl.enableTorch(!isTorchOn)
+            val icon = if (isTorchOn) R.drawable.flash_off else R.drawable.flash_on
+            binding.flashToggleIB.setImageResource(icon)
         } else {
-            requestPermissions(
-                arrayOf(Manifest.permission.CAMERA),
-                CAMERA_PERMISSION_CODE
-            )
+            Toast.makeText(requireContext(), "Flash is not available", Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    private fun setupView() {
+        // Hide status bar and action bar
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+        requireActivity().actionBar?.hide()
 
-        if (requestCode == CAMERA_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startCameraX()
-            } else {
-                Toast.makeText(requireContext(), "Izin Kamera Diperlukan", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
+        // Hide Bottom Navigation and FloatingActionButton
+        val bottomAppBar = requireActivity().findViewById<BottomAppBar>(R.id.bottomAppBar)
+        bottomAppBar?.visibility = View.GONE
+
+        val kamera = requireActivity().findViewById<FloatingActionButton>(R.id.kamera)
+        kamera?.visibility = View.GONE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
