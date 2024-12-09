@@ -1,9 +1,12 @@
 package com.dicoding.mybottomnavtest.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.dicoding.mybottomnavtest.DetailRecipeActivity
 import com.dicoding.mybottomnavtest.data.RecipeData
 import com.dicoding.mybottomnavtest.databinding.ItemSpiceRecipeListBinding
 
@@ -27,19 +30,19 @@ class RecipeAdapter(val context: Context?, private val items: List<RecipeData>) 
                 binding.tvRecipeSpice.text = this.name
                 binding.ivRecipeSpice.setImageResource(this.image)
 
-//                binding.root.setOnClickListener {
-//                    val bundle = Bundle()
-//                    bundle.putString("title", this.title)
-//                    bundle.putString("date", this.date)
-//                    bundle.putString("author", this.author)
-//                    bundle.putString("content", this.content)
-//                    bundle.putInt("image", this.image)
-//                    bundle.putBoolean("isFavorite", this.isFavorite)
-//
-//                    val intent = Intent(context, DetailArticleActivity::class.java)
-//                    intent.putExtras(bundle)
-//                    context?.startActivity(intent)
-//                }
+                binding.root.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putString("name", this.name)
+                    bundle.putInt("image", this.image)
+                    bundle.putString("description", this.description)
+                    bundle.putString("ingredients", this.description)
+                    bundle.putString("steps", this.description)
+                    bundle.putString("tips", this.description)
+
+                    val intent = Intent(context, DetailRecipeActivity::class.java)
+                    intent.putExtras(bundle)
+                    context?.startActivity(intent)
+                }
             }
         }
     }

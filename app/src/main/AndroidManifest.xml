@@ -25,6 +25,9 @@
             android:name=".CameraResult.CameraResultActivity"
             android:exported="false" />
         <activity
+            android:name=".DetailRecipeActivity"
+            android:exported="false" />
+        <activity
             android:name=".SpiceActivity"
             android:exported="false" />
         <activity
