@@ -1,11 +1,14 @@
 package com.dicoding.mybottomnavtest.repository
 
-import androidx.lifecycle.LiveData
-import com.dicoding.mybottomnavtest.dao.EventDao
-import com.dicoding.mybottomnavtest.data.Event
+import com.dicoding.mybottomnavtest.NewsResponse.ArticleViewPagerResponse
+import com.dicoding.mybottomnavtest.api.ApiClient
+import retrofit2.Response
 
-class NewsRepository (private val eventDao: EventDao) {
-//    fun getAllFavorites(): LiveData<List<Event>> {
-//        return eventDao.getAllFavorites()
-//    }
+class NewsRepository {
+
+    private val apiService = ApiClient.ArticleApiService()
+
+    suspend fun getViewPagerArticles(): Response<ArticleViewPagerResponse> {
+        return apiService.getViewPagerArticles()
+    }
 }

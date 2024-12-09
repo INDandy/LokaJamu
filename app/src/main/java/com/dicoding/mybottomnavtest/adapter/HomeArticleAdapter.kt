@@ -46,7 +46,7 @@ class HomeArticleAdapter(
             }
         } else {
             with(holder.binding) {
-                tvHomeHorizontal.text = "Dummy Title"
+                tvHomeHorizontal.text = "Error Articles"
                 Glide.with(ivHomeHorizontal.context)
                     .load(R.drawable.lokajamulogo)
                     .placeholder(R.drawable.lokajamulogo)

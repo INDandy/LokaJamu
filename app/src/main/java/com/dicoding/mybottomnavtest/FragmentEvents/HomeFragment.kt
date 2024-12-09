@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.dicoding.mybottomnavtest.ArticleActivity
 import com.dicoding.mybottomnavtest.MainActivity
 import com.dicoding.mybottomnavtest.R
@@ -23,6 +24,7 @@ import com.dicoding.mybottomnavtest.SpiceActivity
 import com.dicoding.mybottomnavtest.adapter.HomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeRecipeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeSpiceAdapter
+import com.dicoding.mybottomnavtest.adapter.ViewPagerAdapter
 import com.dicoding.mybottomnavtest.api.ApiClient
 import com.dicoding.mybottomnavtest.data.ListEventsItem
 import com.dicoding.mybottomnavtest.databinding.FragmentHomeBinding
@@ -38,73 +40,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var progressBar: ProgressBar
-    private val eventsList = mutableListOf<ListEventsItem>()
     private lateinit var userViewModel: UserViewModel
-    private val newsViewModel: NewsViewModel by viewModels()
     private lateinit var homeRecipeAdapter: HomeRecipeAdapter
     private lateinit var homeSpiceAdapter: HomeSpiceAdapter
     private lateinit var homeArticleAdapter: HomeArticleAdapter
+    private val eventsList = mutableListOf<ListEventsItem>()
+    private val newsViewModel: NewsViewModel by viewModels()
+    private lateinit var viewPager: ViewPager2
+    private lateinit var adapter: ViewPagerAdapter
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        //RECIPES
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        progressBar = binding.loading
-        binding.rvRecipesHome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        homeRecipeAdapter = HomeRecipeAdapter(emptyList())
-        binding.rvRecipesHome.adapter = homeRecipeAdapter
 
-        newsViewModel.RecipeLiveData.observe(viewLifecycleOwner) { homeRecipe ->
-            homeRecipeAdapter = HomeRecipeAdapter(homeRecipe)
-            binding.rvRecipesHome.adapter = homeRecipeAdapter
-            binding.loading.visibility = View.GONE
-        }
-        //RECIPES
+        setupRecipes(inflater, container)
 
-        //SPICES
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        progressBar = binding.loading
-        binding.rvSpicesHome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        homeSpiceAdapter = HomeSpiceAdapter(emptyList())
-        binding.rvSpicesHome.adapter = homeSpiceAdapter
+        setupSpices(inflater, container)
 
-        newsViewModel.SpicesLiveData.observe(viewLifecycleOwner) { spiceList ->
-            homeSpiceAdapter.updateData(spiceList)
-            binding.loading.visibility = View.GONE
-        }
-
-        //SPICES
-
-        //ARTICLE
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        progressBar = binding.loading
-        binding.rvArticlesHome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        homeArticleAdapter = HomeArticleAdapter(emptyList())
-        binding.rvArticlesHome.adapter = homeArticleAdapter
-
-        newsViewModel.latestNewsLiveData.observe(viewLifecycleOwner) { homeArticle ->
-            if (homeArticle.isNotEmpty()) {
-                homeArticleAdapter.updateData(homeArticle)
-            } else {
-                homeArticleAdapter.updateData(emptyList())
-            }
-            binding.loading.visibility = View.GONE
-        }
-
-
-        //ARTICLE
-
-        newsViewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
-            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
-            homeArticleAdapter.updateData(emptyList())
-            binding.loading.visibility = View.GONE
-        }
-
-
+        setupArticles(inflater, container)
 
         userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
         userViewModel.userDetailsStatus.observe(viewLifecycleOwner) { status ->
@@ -122,20 +78,74 @@ class HomeFragment : Fragment(), View.OnClickListener {
         binding.loading.visibility = View.VISIBLE
 
         newsViewModel.fetchRecipesHome()
-        newsViewModel.fetchSpicesHome()
+        newsViewModel.fetchSpices()
         newsViewModel.fetchArticlesHome()
+
 
         return binding.root
     }
 
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewPager = view.findViewById(R.id.viewPager2)
+        adapter = ViewPagerAdapter(emptyList())
 
         binding.tvSeeAllRecipes.setOnClickListener(this)
         binding.tvSeeAllSpices.setOnClickListener(this)
         binding.tvSeeAllArticles.setOnClickListener(this)
 
+    }
+
+    private fun setupRecipes(inflater: LayoutInflater, container: ViewGroup?) {
+
+        progressBar = binding.loading
+        binding.rvRecipesHome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        homeRecipeAdapter = HomeRecipeAdapter(emptyList())
+        binding.rvRecipesHome.adapter = homeRecipeAdapter
+
+        newsViewModel.RecipeLiveData.observe(viewLifecycleOwner) { homeRecipe ->
+            if (homeRecipe.isNotEmpty()) {
+                homeRecipeAdapter.updateData(homeRecipe)
+            } else {
+                homeRecipeAdapter.updateData(emptyList())
+            }
+            binding.loading.visibility = View.GONE
+        }
+    }
+
+    private fun setupSpices(inflater: LayoutInflater, container: ViewGroup?) {
+        progressBar = binding.loading
+        binding.rvSpicesHome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        homeSpiceAdapter = HomeSpiceAdapter(emptyList())
+        binding.rvSpicesHome.adapter = homeSpiceAdapter
+
+        newsViewModel.SpicesLiveData.observe(viewLifecycleOwner) { homeSpice ->
+            if (homeSpice.isNotEmpty()) {
+                homeSpiceAdapter.updateData(homeSpice)
+            } else {
+                homeSpiceAdapter.updateData(emptyList())
+            }
+            binding.loading.visibility = View.GONE
+        }
+    }
+
+    private fun setupArticles(inflater: LayoutInflater, container: ViewGroup?) {
+        progressBar = binding.loading
+        binding.rvArticlesHome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        homeArticleAdapter = HomeArticleAdapter(emptyList())
+        binding.rvArticlesHome.adapter = homeArticleAdapter
+
+        newsViewModel.latestNewsLiveData.observe(viewLifecycleOwner) { homeArticle ->
+            if (homeArticle.isNotEmpty()) {
+                homeArticleAdapter.updateData(homeArticle)
+            } else {
+                homeArticleAdapter.updateData(emptyList())
+            }
+            binding.loading.visibility = View.GONE
+        }
     }
 
     private fun fetchUserDetails() {
@@ -173,7 +183,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
     }
 
-
     private fun showSessionExpiredDialog() {
         val mainActivity = activity as? MainActivity
         mainActivity?.runOnUiThread {
@@ -187,8 +196,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 .show()
         }
     }
-
-
 
     private fun filterEvents(query: String) {
         val filteredList = if (query.isEmpty()) {

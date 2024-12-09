@@ -5,24 +5,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.mybottomnavtest.NewsResponse.ArticlesItem
-import com.dicoding.mybottomnavtest.Response.Recipe
-import com.dicoding.mybottomnavtest.Response.Spice
+import com.dicoding.mybottomnavtest.Response.RecipesItem
+import com.dicoding.mybottomnavtest.Response.SpicesItem
 import com.dicoding.mybottomnavtest.api.ApiClient
 import kotlinx.coroutines.launch
 
 class NewsViewModel : ViewModel() {
 
     private val _articlesLiveData = MutableLiveData<List<ArticlesItem>>()
-    val articlesLiveData: LiveData<List<ArticlesItem>> get() = _articlesLiveData
-
     private val _errorLiveData = MutableLiveData<String>()
+
+    val articlesLiveData: LiveData<List<ArticlesItem>> get() = _articlesLiveData
     val errorLiveData: LiveData<String> get() = _errorLiveData
-
     val latestNewsLiveData = MutableLiveData<List<ArticlesItem>>()
-
-    val RecipeLiveData = MutableLiveData<List<Recipe>>()
-
-    val SpicesLiveData = MutableLiveData<List<Spice>>()
+    val RecipeLiveData = MutableLiveData<List<RecipesItem>>()
+    val SpicesLiveData = MutableLiveData<List<SpicesItem>>()
 
     fun fetchArticles() {
         viewModelScope.launch {
@@ -73,13 +70,14 @@ class NewsViewModel : ViewModel() {
             }
         }
     }
-    fun fetchSpicesHome() {
+    fun fetchSpices() {
         viewModelScope.launch {
             try {
                 val response = ApiClient.SpiceApiService().getSpice()
                 if (response.isSuccessful) {
                     SpicesLiveData.postValue(
-                        listOf(response.body()?.data?.spice ?: emptyList<Spice>()) as List<Spice>?)
+                        (response.body()?.data?.spices ?: emptyList()) as List<SpicesItem>?
+                    )
                 } else {
                     _errorLiveData.postValue("Failed to load latest news")
                 }
@@ -89,13 +87,15 @@ class NewsViewModel : ViewModel() {
         }
     }
 
+
     fun fetchRecipesHome() {
         viewModelScope.launch {
             try {
                 val response = ApiClient.RecipeApiService().getRecipes()
                 if (response.isSuccessful) {
                     RecipeLiveData.postValue(
-                        listOf(response.body()?.data?.recipe ?: emptyList<Recipe>()) as List<Recipe>?)
+                        (response.body()?.data?.recipes ?: emptyList()) as List<RecipesItem>?
+                    )
                 } else {
                     _errorLiveData.postValue("Failed to load latest news")
                 }
@@ -103,6 +103,9 @@ class NewsViewModel : ViewModel() {
                 _errorLiveData.postValue(e.message)
             }
         }
+    }
+    private fun handleError(message: String) {
+        _errorLiveData.postValue(message)
     }
 }
 

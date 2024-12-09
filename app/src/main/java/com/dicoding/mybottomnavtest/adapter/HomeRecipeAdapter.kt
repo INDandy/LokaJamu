@@ -5,18 +5,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.dicoding.mybottomnavtest.DetailActivity
-import com.dicoding.mybottomnavtest.Response.Recipe
-import com.dicoding.mybottomnavtest.databinding.ItemSpiceRecipeListBinding
+import com.dicoding.mybottomnavtest.DetailRecipeActivity
+import com.dicoding.mybottomnavtest.R
+import com.dicoding.mybottomnavtest.Response.RecipesItem
+import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
 
 class HomeRecipeAdapter(
-    private var items: List<Recipe>
+    private var items: List<RecipesItem> = emptyList()
 ) : RecyclerView.Adapter<HomeRecipeAdapter.HomeRecipeViewHolder>() {
 
-    class HomeRecipeViewHolder(val binding: ItemSpiceRecipeListBinding) : RecyclerView.ViewHolder(binding.root)
+    class HomeRecipeViewHolder(val binding: ItemHomeHorizontalBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeRecipeViewHolder {
-        val binding = ItemSpiceRecipeListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemHomeHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HomeRecipeViewHolder(binding)
     }
 
@@ -25,23 +26,46 @@ class HomeRecipeAdapter(
     }
 
     override fun onBindViewHolder(holder: HomeRecipeViewHolder, position: Int) {
-        val recipe = items[position]
-        with(holder.binding) {
-            tvRecipeSpice.text = recipe.name
+        if (items.isNotEmpty() && position < items.size) {
+            val recipe = items[position]
+            with(holder.binding) {
+                tvHomeHorizontal.text = recipe.name ?: "No Title"
 
-            Glide.with(ivRecipeSpice.context)
-                .load(recipe.imageUrl)
-                .into(ivRecipeSpice)
+                Glide.with(ivHomeHorizontal.context)
+                    .load(recipe.imageUrl)
+                    .placeholder(R.drawable.no_content)
+                    .error(R.drawable.error_image)
+                    .into(ivHomeHorizontal)
 
-            root.setOnClickListener {
-                val recipeId = recipe.id
-                val context = root.context
-                val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra("EVENT_ID", recipeId)
-                context.startActivity(intent)
+                root.setOnClickListener {
+                    val recipeId = recipe.id
+                    val context = holder.binding.root.context
+                    val intent = Intent(context, DetailRecipeActivity::class.java)
+                    intent.putExtra("RECIPE_ID", recipeId)
+                    context.startActivity(intent)
+                }
             }
+        } else {
+            with(holder.binding) {
+                tvHomeHorizontal.text = "Error Recipes"
+                Glide.with(ivHomeHorizontal.context)
+                    .load(R.drawable.lokajamulogo)
+                    .placeholder(R.drawable.lokajamulogo)
+                    .error(R.drawable.error_image)
+                    .into(ivHomeHorizontal)
 
+                root.setOnClickListener {
+                }
+            }
         }
     }
 
+    fun updateData(newItems: List<RecipesItem>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
 }
+
+
+
+
