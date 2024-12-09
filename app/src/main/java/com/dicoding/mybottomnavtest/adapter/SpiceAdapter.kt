@@ -1,9 +1,12 @@
 package com.dicoding.mybottomnavtest.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.dicoding.mybottomnavtest.DetailSpiceActivity
 import com.dicoding.mybottomnavtest.data.SpiceData
 import com.dicoding.mybottomnavtest.databinding.ItemSpiceRecipeListBinding
 
@@ -27,19 +30,18 @@ class SpiceAdapter(val context: Context?, private val items: List<SpiceData>) :
                 binding.tvRecipeSpice.text = this.name
                 binding.ivRecipeSpice.setImageResource(this.image)
 
-//                binding.root.setOnClickListener {
-//                    val bundle = Bundle()
-//                    bundle.putString("title", this.title)
-//                    bundle.putString("date", this.date)
-//                    bundle.putString("author", this.author)
-//                    bundle.putString("content", this.content)
-//                    bundle.putInt("image", this.image)
-//                    bundle.putBoolean("isFavorite", this.isFavorite)
-//
-//                    val intent = Intent(context, DetailArticleActivity::class.java)
-//                    intent.putExtras(bundle)
-//                    context?.startActivity(intent)
-//                }
+                binding.root.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putString("name", this.name)
+                    bundle.putInt("image", this.image)
+                    bundle.putString("description", this.description)
+                    bundle.putString("benefits", this.benefit)
+                    bundle.putString("jamulist", this.benefit)
+
+                    val intent = Intent(context, DetailSpiceActivity::class.java)
+                    intent.putExtras(bundle)
+                    context?.startActivity(intent)
+                }
             }
         }
     }

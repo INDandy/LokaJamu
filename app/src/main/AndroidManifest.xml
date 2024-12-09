@@ -22,6 +22,9 @@
         android:theme="@style/Theme.MyBottomNavTest"
         tools:targetApi="31">
         <activity
+            android:name=".DetailSpiceActivity"
+            android:exported="false" />
+        <activity
             android:name=".CameraResult.CameraResultActivity"
             android:exported="false" />
         <activity
