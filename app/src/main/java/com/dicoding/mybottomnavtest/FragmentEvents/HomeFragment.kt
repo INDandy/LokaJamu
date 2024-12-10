@@ -37,7 +37,7 @@ import com.dicoding.mybottomnavtest.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
 
-class HomeFragment : Fragment(), View.OnClickListener {
+class HomeFragment : Fragment(), View.OnClickListener{
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeAdapter: HomeAdapter
@@ -48,6 +48,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var homeArticleAdapter: HomeArticleAdapter
     private lateinit var spiceViewPagerAdapter: SpiceViewPagerAdapter
     private val autoScrollHandler = Handler(Looper.getMainLooper())
+    private val eventsList = mutableListOf<ListEventsItem>()
+    private val newsViewModel: NewsViewModel by viewModels()
+    private lateinit var viewPager: ViewPager2
+    private lateinit var adapter: SpiceViewPagerAdapter
     private val scrollRunnable = object : Runnable {
         override fun run() {
             val currentItem = viewPager.currentItem
@@ -56,10 +60,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
             autoScrollHandler.postDelayed(this, 3000)
         }
     }
-    private val eventsList = mutableListOf<ListEventsItem>()
-    private val newsViewModel: NewsViewModel by viewModels()
-    private lateinit var viewPager: ViewPager2
-    private lateinit var adapter: SpiceViewPagerAdapter
 
 
     override fun onCreateView(
@@ -233,11 +233,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         homeAdapter.updateData(filteredList)
 
-//        if (filteredList.isEmpty()) {
-//            binding.noDataMessage.visibility = View.VISIBLE
-//        } else {
-//            binding.noDataMessage.visibility = View.GONE
-//        }
     }
 
     private fun showLoading(isLoading: Boolean) {
@@ -275,7 +270,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
     }
     private fun startAutoScroll() {
-        autoScrollHandler.postDelayed(scrollRunnable, 3000)  // Ganti waktu sesuai keinginan (misalnya 3000 ms = 3 detik)
+        autoScrollHandler.postDelayed(scrollRunnable, 3000)
     }
 
 }

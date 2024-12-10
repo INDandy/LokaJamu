@@ -14,7 +14,10 @@ data class RecipeResponse(
 data class DataRecipes(
 
 	@field:SerializedName("recipes")
-	val recipes: List<RecipesItem?>? = null
+	val recipes: List<RecipesItem?>? = null,
+
+	@field:SerializedName("recipe")
+	val recipe: RecipesItem? = null
 )
 
 data class StepsItem(

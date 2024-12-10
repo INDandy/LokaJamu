@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:background="@color/bone_white"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -11,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:visibility="gone"
+        android:background="@color/bone_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,7 +25,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/bone_white"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -180,15 +182,18 @@
                 android:id="@+id/fab_bookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:clickable="true"
-                app:rippleColor="@color/hijau_muda"
-                app:tint="@color/white"
-                android:focusable="true"
                 android:backgroundTint="@color/oranye"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@+id/tv_spice_description"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_spice_name"
-                app:srcCompat="@drawable/baseline_bookmark_add_24" />
+                app:layout_constraintTop_toBottomOf="@+id/tags_spice"
+                app:layout_constraintVertical_bias="1.0"
+                app:rippleColor="@color/hijau_muda"
+                app:srcCompat="@drawable/baseline_bookmark_add_24"
+                app:tint="@color/white" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

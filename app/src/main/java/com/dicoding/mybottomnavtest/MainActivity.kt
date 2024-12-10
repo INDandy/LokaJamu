@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             resetIconSizes()
 
             val itemView = binding.bottomNavigationView.findViewById<View>(item.itemId)
-            itemView?.animate()?.scaleX(1.3f)?.scaleY(1.3f)?.setDuration(170)?.start()
+            itemView?.animate()?.scaleX(1f)?.scaleY(1f)?.setDuration(5)?.start()
 
             binding.bottomNavigationView.setBackgroundResource(android.R.color.transparent)
 
@@ -86,6 +86,10 @@ class MainActivity : AppCompatActivity() {
         binding.kamera.visibility = if (showBottomBar) View.VISIBLE else View.GONE
 
         supportFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
             .replace(R.id.frame_layout, fragment)
             .commit()
     }

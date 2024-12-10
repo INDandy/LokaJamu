@@ -11,6 +11,8 @@ data class SpicesResponse(
 	val status: String? = null
 )
 
+
+
 data class SpicesItem(
 
 	@field:SerializedName("benefits")
@@ -38,5 +40,8 @@ data class SpicesItem(
 data class DataSpice(
 
 	@field:SerializedName("spices")
-	val spices: List<SpicesItem?>? = null
+	val spices: List<SpicesItem?>? = null,
+
+	@field:SerializedName("spice")
+	val spice: SpicesItem? = null
 )

@@ -9,15 +9,17 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.mybottomnavtest.ArticleActivity
 import com.dicoding.mybottomnavtest.ArticleDetailActivity
 import com.dicoding.mybottomnavtest.NewsResponse.ArticlesItem
+import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.adapter.ArticlesAdapter
 import com.dicoding.mybottomnavtest.adapter.LatestNewsAdapter
 import com.dicoding.mybottomnavtest.databinding.FragmentNewsBinding
 import com.dicoding.mybottomnavtest.viewmodel.NewsViewModel
 
 
-class NewsFragment : Fragment() {
+class NewsFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentNewsBinding
     private lateinit var articlesAdapter: ArticlesAdapter
@@ -29,6 +31,8 @@ class NewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentNewsBinding.inflate(inflater, container, false)
+
+        binding.tvSeeAll.setOnClickListener(this)
 
         binding.rvArticleList.layoutManager = LinearLayoutManager(requireContext())
         articlesAdapter = ArticlesAdapter(emptyList()) { article -> openArticleDetail(article) }
@@ -48,7 +52,6 @@ class NewsFragment : Fragment() {
             latestNewsAdapter = LatestNewsAdapter(latestNews)
             binding.rvLatestArticle.adapter = latestNewsAdapter
             binding.loading.visibility = View.GONE
-
         }
 
         newsViewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
@@ -63,12 +66,22 @@ class NewsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onClick(p0: View) {
+        when (p0.id) {
+            R.id.tv_see_all -> {
+                val intent = Intent(context, ArticleActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
     private fun openArticleDetail(article: ArticlesItem) {
         val intent = Intent(requireContext(), ArticleDetailActivity::class.java)
         intent.putExtra("article_id", article.id)
         startActivity(intent)
     }
 }
+
 
 
 

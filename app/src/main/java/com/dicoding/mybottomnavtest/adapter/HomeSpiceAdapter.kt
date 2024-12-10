@@ -1,9 +1,11 @@
 package com.dicoding.mybottomnavtest.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dicoding.mybottomnavtest.DetailSpiceActivity
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.Response.SpicesItem
 import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
@@ -36,6 +38,11 @@ class HomeSpiceAdapter(
                     .into(ivHomeHorizontal)
 
                 root.setOnClickListener {
+                    val spiceItem = recipe.id
+                    val context = holder.binding.root.context
+                    val intent = Intent(context, DetailSpiceActivity::class.java)
+                    intent.putExtra("SPICE_ID", spiceItem)
+                    context.startActivity(intent)
 
                 }
             }

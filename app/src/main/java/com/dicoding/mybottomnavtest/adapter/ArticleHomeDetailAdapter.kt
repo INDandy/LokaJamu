@@ -1,5 +1,6 @@
 package com.dicoding.mybottomnavtest.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dicoding.mybottomnavtest.DetailActivity
 import com.dicoding.mybottomnavtest.NewsResponse.ArticlesItem
 import com.dicoding.mybottomnavtest.R
 
@@ -29,7 +31,11 @@ class ArticleHomeDetailAdapter(
             titleTextView.text = article.title ?: "No Title"
 
             itemView.setOnClickListener {
-                onItemClick(article)
+                val articleId = article.id
+                val context = itemView.context
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("EVENT_ID", articleId)
+                context.startActivity(intent)
             }
         }
     }

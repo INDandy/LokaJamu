@@ -3,7 +3,6 @@ package com.dicoding.mybottomnavtest.CameraResult
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.dicoding.mybottomnavtest.FragmentDetail.BottomSheetDetailSpice
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.databinding.ActivityCameraResultBinding
 
