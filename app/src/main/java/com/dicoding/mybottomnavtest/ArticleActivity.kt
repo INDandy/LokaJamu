@@ -1,117 +1,71 @@
 package com.dicoding.mybottomnavtest
 
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.mybottomnavtest.NewsResponse.ArticlesItem
+import com.dicoding.mybottomnavtest.adapter.ArticleHomeDetailAdapter
+import com.dicoding.mybottomnavtest.databinding.ActivityArticleBinding
+import com.dicoding.mybottomnavtest.viewmodel.NewsViewModel
 
 class ArticleActivity : AppCompatActivity() {
-//    private lateinit var binding: ActivityArticleBinding
-//    private lateinit var articleAdapter: NewsAdapter
-//    private lateinit var filteredList: ArrayList<ArticleData>
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        binding = ActivityArticleBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//
-//        binding.rvArticle.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-//        setAdapter()
-//        setSearchView(binding.searchArticle)
-//
-//        binding.ivBack.setOnClickListener {
-//            finish()
-//        }
-//    }
-//
-//    private fun setSearchView(searchView: androidx.appcompat.widget.SearchView) {
-//        searchView.setOnSearchClickListener {
-//            binding.searchArticle.queryHint = "Cari Artikel Disini"
-//            binding.ivBack.visibility = View.GONE
-//            binding.tvArticleHeader.visibility = View.GONE
-//        }
-//
-//        searchView.setOnCloseListener {
-//            binding.ivBack.visibility = View.VISIBLE
-//            binding.tvArticleHeader.visibility = View.VISIBLE
-//            false
-//        }
-//    }
-//
-//    private fun setAdapter() {
-//        val dataList:MutableList<ArticleData> = mutableListOf()
-//
-//        articleTitleDummy().forEachIndexed { index, title ->
-//            dataList.add(
-//                ArticleData(index, articleImageDummy()[index], title, articleDateDummy()[index], articleAuthorDummy()[index], articleContentDummy()[index])
-//            )
-//        }
-//
-//        articleAdapter = NewsAdapter(this, dataList)
-//        binding.rvArticle.adapter = articleAdapter
-//
-//        setAdapterOnSearch(dataList)
-//    }
-//
-//    private fun setAdapterOnSearch(data: MutableList<ArticleData>) {
-//        filteredList = ArrayList(data)
-//
-//        binding.searchArticle.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-//            androidx.appcompat.widget.SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(p0: String?): Boolean {
-//                TODO("Not yet implemented")
-//            }
-//
-//            @SuppressLint("NotifyDataSetChanged")
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                data.clear()
-//                val searchText = newText!!.lowercase(Locale.getDefault())
-//
-//                if (searchText.isNotEmpty()) {
-//                    filteredList.forEach {
-//                        if (it.title.lowercase(Locale.getDefault()).contains(searchText)) {
-//                            data.add(it)
-//                        }
-//                    }
-//                    articleAdapter.notifyDataSetChanged()
-//
-//                    if(data.isEmpty()) {
-//                        Snackbar.make(binding.root, "Artikel Tidak Ditemukan", Snackbar.LENGTH_SHORT)
-//                            .setAction("Hapus") { binding.searchArticle.setQuery("", false) }
-//                            .setActionTextColor(ContextCompat.getColor(binding.root.context, R.color.oranye))
-//                            .show()
-//                    }
-//                }
-//                else {
-//                    data.clear()
-//                    data.addAll(filteredList)
-//                    articleAdapter.notifyDataSetChanged()
-//                }
-//                return false
-//            }
-//        })
-//    }
-//
-//    private fun articleImageDummy(): List<Int> {
-//        return listOf(
-//            R.drawable.image_article_1,
-//            R.drawable.image_article_2,
-//            R.drawable.image_article_3,
-//            R.drawable.image_article_3,
-//            R.drawable.image_article_3
-//        )
-//    }
-//
-//    private fun articleTitleDummy(): Array<String> {
-//        return resources.getStringArray(R.array.articleTitle)
-//    }
-//
-//    private fun articleDateDummy(): Array<String> {
-//        return resources.getStringArray(R.array.articleDate)
-//    }
-//
-//    private fun articleAuthorDummy(): Array<String> {
-//        return resources.getStringArray(R.array.articleAuthor)
-//    }
-//
-//    private fun articleContentDummy(): Array<String> {
-//        return resources.getStringArray(R.array.articleContent)
-//    }
+    private lateinit var binding: ActivityArticleBinding
+    private lateinit var articleAdapter: ArticleHomeDetailAdapter
+    private lateinit var filteredList: ArrayList<ArticlesItem>
+    private val newsViewModel: NewsViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityArticleBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.rvArticle.layoutManager = LinearLayoutManager(this)
+        articleAdapter = ArticleHomeDetailAdapter(emptyList()) { article -> openArticleDetail(article) }
+        binding.rvArticle.adapter = articleAdapter
+
+        newsViewModel.latestNews.observe(this) { articles ->
+            articleAdapter = ArticleHomeDetailAdapter(articles) { article ->
+                openArticleDetail(article)
+            }
+            binding.rvArticle.adapter = articleAdapter
+            binding.loading.visibility = View.GONE
+        }
+
+
+        binding.rvArticle.layoutManager = GridLayoutManager(this, 2)
+        setSearchView(binding.searchArticle)
+
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
+
+        binding.loading.visibility = View.VISIBLE
+        newsViewModel.fetchArticlesHome()
+    }
+
+    private fun openArticleDetail(recipe: ArticlesItem) {
+        val intent = Intent(this, ArticleDetailActivity::class.java)
+        intent.putExtra("RECIPE_ID", recipe.id)
+        startActivity(intent)
+    }
+
+
+    private fun setSearchView(searchView: androidx.appcompat.widget.SearchView) {
+        searchView.setOnSearchClickListener {
+            binding.searchArticle.queryHint = "Cari Bahan Jamu Disini"
+            binding.ivBack.visibility = View.GONE
+            binding.tvArticleHeader.visibility = View.GONE
+        }
+
+        searchView.setOnCloseListener {
+            binding.ivBack.visibility = View.VISIBLE
+            binding.tvArticleHeader.visibility = View.VISIBLE
+            false
+        }
+    }
 }
+

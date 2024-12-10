@@ -1,49 +1,58 @@
 package com.dicoding.mybottomnavtest.adapter
 
-import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dicoding.mybottomnavtest.DetailRecipeActivity
-import com.dicoding.mybottomnavtest.data.RecipeData
-import com.dicoding.mybottomnavtest.databinding.ItemSpiceRecipeListBinding
+import com.bumptech.glide.Glide
+import com.dicoding.mybottomnavtest.DetailActivity
+import com.dicoding.mybottomnavtest.R
+import com.dicoding.mybottomnavtest.Response.RecipesItem
 
-class RecipeAdapter(val context: Context?, private val items: List<RecipeData>) :
-    RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
+class RecipeAdapter(
+    private var articles: List<RecipesItem>,
+    private val onItemClick: (RecipesItem) -> Unit
+) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
 
-    class ViewHolder(val binding: ItemSpiceRecipeListBinding): RecyclerView.ViewHolder(binding.root)
+    inner class RecipeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val imageView: ImageView = view.findViewById(R.id.iv_recipe_spice)
+        private val titleTextView: TextView = view.findViewById(R.id.tv_recipe_spice)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemSpiceRecipeListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
-    }
+        fun bind(recipe: RecipesItem) {
+            Glide.with(itemView.context)
+                .load(recipe.imageUrl)
+                .into(imageView)
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+            titleTextView.text = recipe.name
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(holder) {
-            with(items[position]) {
-                binding.tvRecipeSpice.text = this.name
-                binding.ivRecipeSpice.setImageResource(this.image)
 
-                binding.root.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putString("name", this.name)
-                    bundle.putInt("image", this.image)
-                    bundle.putString("description", this.description)
-                    bundle.putString("ingredients", this.description)
-                    bundle.putString("steps", this.description)
-                    bundle.putString("tips", this.description)
-
-                    val intent = Intent(context, DetailRecipeActivity::class.java)
-                    intent.putExtras(bundle)
-                    context?.startActivity(intent)
-                }
+            itemView.setOnClickListener {
+                val recipeId = recipe.id
+                val context = itemView.context
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("RECIPE_ID", recipeId)
+                context.startActivity(intent)
             }
         }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_spice_recipe_list, parent, false)
+        return RecipeViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
+        holder.bind(articles[position])
+    }
+
+    override fun getItemCount(): Int = articles.size
+
+    fun updateArticles(newArticles: Any) {
+        articles = newArticles as List<RecipesItem>
+        notifyDataSetChanged()
     }
 }
