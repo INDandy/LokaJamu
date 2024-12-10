@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.dicoding.mybottomnavtest" />
+                  <option name="mobileSdkAppId" value="1:1067454578376:android:d663f8425af069cc3e6ffd" />
+                  <option name="projectId" value="applokajamu" />
+                  <option name="projectNumber" value="1067454578376" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

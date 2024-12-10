@@ -4,117 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     tools:context=".CameraResult.CameraResultActivity">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="16dp">
-
-        <RelativeLayout
-            android:id="@+id/tvResult"
-            android:layout_width="match_parent"
-            android:layout_height="250dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="Captured Image"
+                    android:layout_height="275dp"
+                    android:background="@drawable/outline_gray"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_placeholder" />
-            </LinearLayout>
-            <ImageButton
-                android:id="@+id/backButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="10dp"
-                android:background="@color/hijau_muda"
-                android:scaleType="centerCrop"
-                android:contentDescription="Back Button"
-                app:tint="@color/hijau"
-                android:src="@android:drawable/ic_menu_revert" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/tvResult"
-            android:background="@drawable/tab_background">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="15dp">
-
-
-                <TextView
-                    android:id="@+id/resultLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="Result :"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:id="@+id/fab_bookmark"-->
-<!--                    android:layout_width="305dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginEnd="24dp"-->
-<!--                    android:backgroundTint="@color/oranye"-->
-<!--                    android:src="@drawable/baseline_bookmark_add_24"-->
-<!--                    app:fabSize="mini"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:rippleColor="@color/hijau_muda"-->
-<!--                    app:tint="@color/white" />-->
-
-                <!--                <TextView-->
-<!--                    android:id="@+id/resultTitle"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="8dp"-->
-<!--                    android:text="Kunyit Asam"-->
-<!--                    android:textSize="24sp"-->
-<!--                    android:textStyle="bold" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/resultDescription"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="4dp"-->
-<!--                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a lacus dolor, blandit dictum erat, eleifend nisl."-->
-<!--                    android:textSize="16sp" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/ingredientsList"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="8dp"-->
-<!--                    android:text="Bahan Bahan:\nBahan 1\nBahan 2\nBahan 3\nBahan 4\nBahan 5"-->
-<!--                    android:textSize="16sp" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/stepsList"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="8dp"-->
-<!--                    android:text="Tahapan Pembuatan:\nTahap 1\nTahap 2\nTahap 3\nTahap 4\nTahap 5"-->
-<!--                    android:textSize="16sp" />-->
-
-            </LinearLayout>
-        </RelativeLayout>
-
-    </RelativeLayout>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/image_article_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
