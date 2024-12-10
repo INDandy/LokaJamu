@@ -45,7 +45,7 @@ class NewsViewModel : ViewModel() {
             try {
                 val response = ApiClient.ArticleApiService().getArticles()
                 if (response.isSuccessful) {
-                    latestDetailHome.postValue(
+                    latestNewsLiveData.postValue(
                         (response.body()?.data?.articles ?: emptyList()) as List<ArticlesItem>?
                     )
                 } else {

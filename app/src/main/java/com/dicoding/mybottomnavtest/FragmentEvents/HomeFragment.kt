@@ -4,6 +4,8 @@ package com.dicoding.mybottomnavtest.FragmentEvents
 import HomeArticleAdapter
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +26,7 @@ import com.dicoding.mybottomnavtest.SpiceActivity
 import com.dicoding.mybottomnavtest.adapter.HomeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeRecipeAdapter
 import com.dicoding.mybottomnavtest.adapter.HomeSpiceAdapter
-import com.dicoding.mybottomnavtest.adapter.ViewPagerAdapter
+import com.dicoding.mybottomnavtest.adapter.SpiceViewPagerAdapter
 import com.dicoding.mybottomnavtest.api.ApiClient
 import com.dicoding.mybottomnavtest.data.ListEventsItem
 import com.dicoding.mybottomnavtest.databinding.FragmentHomeBinding
@@ -44,10 +46,20 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var homeRecipeAdapter: HomeRecipeAdapter
     private lateinit var homeSpiceAdapter: HomeSpiceAdapter
     private lateinit var homeArticleAdapter: HomeArticleAdapter
+    private lateinit var spiceViewPagerAdapter: SpiceViewPagerAdapter
+    private val autoScrollHandler = Handler(Looper.getMainLooper())
+    private val scrollRunnable = object : Runnable {
+        override fun run() {
+            val currentItem = viewPager.currentItem
+            val nextItem = if (currentItem + 1 < spiceViewPagerAdapter.itemCount) currentItem + 1 else 0
+            viewPager.setCurrentItem(nextItem, true)
+            autoScrollHandler.postDelayed(this, 3000)
+        }
+    }
     private val eventsList = mutableListOf<ListEventsItem>()
     private val newsViewModel: NewsViewModel by viewModels()
     private lateinit var viewPager: ViewPager2
-    private lateinit var adapter: ViewPagerAdapter
+    private lateinit var adapter: SpiceViewPagerAdapter
 
 
     override fun onCreateView(
@@ -81,7 +93,20 @@ class HomeFragment : Fragment(), View.OnClickListener {
         newsViewModel.fetchSpices()
         newsViewModel.fetchArticlesHome()
 
+        viewPager = binding.viewPager2
+        spiceViewPagerAdapter = SpiceViewPagerAdapter(emptyList())
+        viewPager.adapter = spiceViewPagerAdapter
 
+        newsViewModel.SpicesLiveData.observe(viewLifecycleOwner) { spices ->
+            if (spices.isNotEmpty()) {
+                spiceViewPagerAdapter = SpiceViewPagerAdapter(spices)
+                viewPager.adapter = spiceViewPagerAdapter
+                startAutoScroll()
+            } else {
+                spiceViewPagerAdapter = SpiceViewPagerAdapter(emptyList())
+                viewPager.adapter = spiceViewPagerAdapter
+            }
+        }
         return binding.root
     }
 
@@ -91,7 +116,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         viewPager = view.findViewById(R.id.viewPager2)
-        adapter = ViewPagerAdapter(emptyList())
+        adapter = SpiceViewPagerAdapter(emptyList())
 
         binding.tvSeeAllRecipes.setOnClickListener(this)
         binding.tvSeeAllSpices.setOnClickListener(this)
@@ -229,6 +254,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        autoScrollHandler.removeCallbacks(scrollRunnable)
         binding
     }
 
@@ -248,5 +274,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
         }
     }
+    private fun startAutoScroll() {
+        autoScrollHandler.postDelayed(scrollRunnable, 3000)  // Ganti waktu sesuai keinginan (misalnya 3000 ms = 3 detik)
+    }
+
 }
 
