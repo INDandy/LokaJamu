@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.dicoding.mybottomnavtest.adapter.HomeSpiceAdapter
 import com.dicoding.mybottomnavtest.databinding.ActivitySpiceBinding
 import com.dicoding.mybottomnavtest.viewmodel.NewsViewModel
@@ -21,16 +21,16 @@ class SpiceActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySpiceBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupRecipes()
+        setupSpices()
 
         binding.loading.visibility = View.VISIBLE
 
-        newsViewModel.fetchRecipesHome()
+        newsViewModel.fetchSpices()
     }
 
-    private fun setupRecipes() {
+    private fun setupSpices() {
         progressBar = binding.loading
-        binding.rvSpices.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvSpices.layoutManager = GridLayoutManager(this, 2)
         homeSpiceAdapter = HomeSpiceAdapter(emptyList())
 
         binding.rvSpices.adapter = homeSpiceAdapter
@@ -51,7 +51,7 @@ class SpiceActivity : AppCompatActivity() {
 
     private fun setSearchView(searchView: androidx.appcompat.widget.SearchView) {
         searchView.setOnSearchClickListener {
-            binding.searchSpice.queryHint = "Cari Resep Jamu Disini"
+            binding.searchSpice.queryHint = "Cari Rempah Rempah Jamu Disini"
             binding.ivBack.visibility = View.GONE
             binding.tvSpiceHeader.visibility = View.GONE
         }

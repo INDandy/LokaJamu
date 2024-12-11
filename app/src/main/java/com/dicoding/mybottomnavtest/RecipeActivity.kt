@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.dicoding.mybottomnavtest.adapter.HomeRecipeAdapter
 import com.dicoding.mybottomnavtest.databinding.ActivityRecipeBinding
 import com.dicoding.mybottomnavtest.viewmodel.NewsViewModel
@@ -30,7 +30,7 @@ class RecipeActivity : AppCompatActivity() {
 
     private fun setupRecipes() {
         progressBar = binding.loading
-        binding.rvRecipes.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvRecipes.layoutManager = GridLayoutManager(this, 2)
         homeRecipeAdapter = HomeRecipeAdapter(emptyList())
 
         binding.rvRecipes.adapter = homeRecipeAdapter
