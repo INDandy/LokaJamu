@@ -8,16 +8,16 @@ import com.bumptech.glide.Glide
 import com.dicoding.mybottomnavtest.DetailSpiceActivity
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.Response.SpicesItem
-import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
+import com.dicoding.mybottomnavtest.databinding.ItemSpiceRecipeListBinding
 
 class HomeSpiceAdapter(
     private var items: List<SpicesItem> = emptyList()
 ) : RecyclerView.Adapter<HomeSpiceAdapter.HomeSpiceViewHolder>() {
 
-    class HomeSpiceViewHolder(val binding: ItemHomeHorizontalBinding) : RecyclerView.ViewHolder(binding.root)
+    class HomeSpiceViewHolder(val binding: ItemSpiceRecipeListBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeSpiceViewHolder {
-        val binding = ItemHomeHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemSpiceRecipeListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HomeSpiceViewHolder(binding)
     }
 
@@ -29,13 +29,13 @@ class HomeSpiceAdapter(
         if (items.isNotEmpty() && position < items.size) {
             val recipe = items[position]
             with(holder.binding) {
-                tvHomeHorizontal.text = recipe.name ?: "No Title"
+                tvRecipeSpice.text = recipe.name ?: "No Title"
 
-                Glide.with(ivHomeHorizontal.context)
+                Glide.with(ivRecipeSpice.context)
                     .load(recipe.imageUrl)
                     .placeholder(R.drawable.no_content)
                     .error(R.drawable.error_image)
-                    .into(ivHomeHorizontal)
+                    .into(ivRecipeSpice)
 
                 root.setOnClickListener {
                     val spiceItem = recipe.id
@@ -48,10 +48,10 @@ class HomeSpiceAdapter(
             }
         } else {
             with(holder.binding) {
-                tvHomeHorizontal.text = "No recipes available"
-                Glide.with(ivHomeHorizontal.context)
+                tvRecipeSpice.text = "No recipes available"
+                Glide.with(ivRecipeSpice.context)
                     .load(R.drawable.placeholder_image)
-                    .into(ivHomeHorizontal)
+                    .into(ivRecipeSpice)
 
                 root.setOnClickListener {
                 }

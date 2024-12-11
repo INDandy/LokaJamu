@@ -8,16 +8,16 @@ import com.bumptech.glide.Glide
 import com.dicoding.mybottomnavtest.DetailRecipeActivity
 import com.dicoding.mybottomnavtest.R
 import com.dicoding.mybottomnavtest.Response.RecipesItem
-import com.dicoding.mybottomnavtest.databinding.ItemHomeHorizontalBinding
+import com.dicoding.mybottomnavtest.databinding.ItemSpiceRecipeListBinding
 
 class HomeRecipeAdapter(
     private var items: List<RecipesItem> = emptyList()
 ) : RecyclerView.Adapter<HomeRecipeAdapter.HomeRecipeViewHolder>() {
 
-    class HomeRecipeViewHolder(val binding: ItemHomeHorizontalBinding) : RecyclerView.ViewHolder(binding.root)
+    class HomeRecipeViewHolder(val binding: ItemSpiceRecipeListBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeRecipeViewHolder {
-        val binding = ItemHomeHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemSpiceRecipeListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HomeRecipeViewHolder(binding)
     }
 
@@ -29,13 +29,13 @@ class HomeRecipeAdapter(
         if (items.isNotEmpty() && position < items.size) {
             val recipe = items[position]
             with(holder.binding) {
-                tvHomeHorizontal.text = recipe.name ?: "No Title"
+                tvRecipeSpice.text = recipe.name ?: "No Title"
 
-                Glide.with(ivHomeHorizontal.context)
+                Glide.with(ivRecipeSpice.context)
                     .load(recipe.imageUrl)
                     .placeholder(R.drawable.no_content)
                     .error(R.drawable.error_image)
-                    .into(ivHomeHorizontal)
+                    .into(ivRecipeSpice)
 
                 root.setOnClickListener {
                     val recipeId = recipe.id
@@ -47,12 +47,12 @@ class HomeRecipeAdapter(
             }
         } else {
             with(holder.binding) {
-                tvHomeHorizontal.text = "Error Recipes"
-                Glide.with(ivHomeHorizontal.context)
+                tvRecipeSpice.text = "Error Recipes"
+                Glide.with(ivRecipeSpice.context)
                     .load(R.drawable.lokajamulogo)
                     .placeholder(R.drawable.lokajamulogo)
                     .error(R.drawable.error_image)
-                    .into(ivHomeHorizontal)
+                    .into(ivRecipeSpice)
 
                 root.setOnClickListener {
                 }
