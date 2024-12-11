@@ -191,19 +191,31 @@ class HomeFragment : Fragment(), View.OnClickListener{
                             userViewModel.setUserDetailsStatus(true)
                             binding.newsName.text = "$firstName"
                         } else {
-                            showSessionExpiredDialog()
+                            handleSessionExpiration()
                         }
                     } else {
-                        showSessionExpiredDialog()
+                        handleSessionExpiration()
                     }
                 } catch (e: Exception) {
-                    showSessionExpiredDialog()
+                    handleSessionExpiration()
                 } finally {
                     showLoading(false)
                 }
             } else {
                 showLoading(false)
+                handleSessionExpiration()
+            }
+        }
+    }
+
+    private fun handleSessionExpiration() {
+        val userPreference = UserPreference.getInstance(requireContext().dataStore)
+        lifecycleScope.launch {
+            val token = userPreference.getToken()
+            if (!token.isNullOrEmpty()) {
                 showSessionExpiredDialog()
+            } else {
+
             }
         }
     }
@@ -221,6 +233,7 @@ class HomeFragment : Fragment(), View.OnClickListener{
                 .show()
         }
     }
+
 
     private fun filterEvents(query: String) {
         val filteredList = if (query.isEmpty()) {
