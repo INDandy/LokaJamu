@@ -20,7 +20,7 @@ class SpiceJamuAdapter(private val jamuList: List<String>) : RecyclerView.Adapte
 
     class JamuViewHolder(private val binding: ItemJamuBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(jamu: String) {
-            binding.tvJamu.text = jamu
+            binding.tvJamuName.text = jamu
         }
     }
 }

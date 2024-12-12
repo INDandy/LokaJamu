@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.mybottomnavtest.adapter.SpiceJamuAdapter
 import com.dicoding.mybottomnavtest.databinding.BottomSheetCameraResultBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheetCameraResult(private val data: Bundle?) : BottomSheetDialogFragment() {
     private lateinit var binding: BottomSheetCameraResultBinding
-    private var bottomSheetBehavior: BottomSheetBehavior<*>? = null
     private lateinit var jamuList: List<String>
 
     override fun onCreateView(
@@ -40,7 +39,7 @@ class BottomSheetCameraResult(private val data: Bundle?) : BottomSheetDialogFrag
 
     private fun setupRecyclerView() {
         val adapter = SpiceJamuAdapter(jamuList)
+        binding.rvSpiceJamulist.layoutManager = LinearLayoutManager(context)
         binding.rvSpiceJamulist.adapter = adapter
     }
 }
-
