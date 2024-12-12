@@ -6,25 +6,23 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-
-@Database(entities = [Article::class], version = 1, exportSchema = false)
+@Database(entities = [Recipe::class], version = 1, exportSchema = false)
 
 @TypeConverters(Converters::class)
-abstract class AppDatabase : RoomDatabase() {
+abstract class RecipeDatabase : RoomDatabase() {
 
-    abstract fun articleDao(): ArticleDao
     abstract fun recipeDao(): RecipeDao
 
     companion object {
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var INSTANCE: RecipeDatabase? = null
 
-        fun getDatabase(context: Context): AppDatabase {
+        fun getRecipeDatabase(context: Context): RecipeDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    AppDatabase::class.java,
-                    "article_database"
+                    RecipeDatabase::class.java,
+                    "recipe_database"
                 ).build()
                 INSTANCE = instance
                 instance
@@ -32,5 +30,3 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
-
-

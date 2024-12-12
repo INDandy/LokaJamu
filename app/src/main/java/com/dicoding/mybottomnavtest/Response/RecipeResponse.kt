@@ -26,7 +26,7 @@ data class StepsItem(
 	val instruction: String? = null,
 
 	@field:SerializedName("stepNumber")
-	val stepNumber: Int? = null
+	val stepNumber: String? = null
 )
 
 data class IngredientsItem(
